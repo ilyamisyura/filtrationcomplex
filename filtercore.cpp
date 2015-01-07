@@ -124,32 +124,37 @@ QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
         double exitCondition
         ){
 
-    QVector < QVector<double> > sigmaGraph;
-    QVector <double> tmpVector(2);
+    QVector <QVector<double> > sigmaGraph;
+//    QVector <double> tmpVector(2);
+    QVector <double> tmpVector;
     QVector <double> tau;
     QVector <double> lambdas;
-    QVector <double> sigmas(numberOfIntervals+1);
+    //QVector <double> sigmas(numberOfIntervals+1);
+    QVector <double> sigmas;
 
     double delta;
     double currentTauValue;
     double previousTauValue;
 
-    qDebug("Sigma generator's started");
-
     for (int i=0; i<=numberOfIntervals; i++){
-        sigmas[i] = lowerSigma + i * sigmaStep;
+        //sigmas[i] = lowerSigma + i * sigmaStep;
+        sigmas.insert(i,lowerSigma + i * sigmaStep);
     }
 
     currentSigmaIndex = intRand(numberOfIntervals)+1;
-    currentSigma = sigmas[currentSigmaIndex];
+    //currentSigma = sigmas[currentSigmaIndex];
+    currentSigma = sigmas.value(currentSigmaIndex);
 
     double startingSigma = lowerSigma + (sigmaStep*currentSigmaIndex);
 
     currentTauValue = 0;
 
-    tmpVector[0] = 0;
-    tmpVector[1] = startingSigma;
+//    tmpVector[0] = 0;
+//    tmpVector[1] = startingSigma;
+    tmpVector.insert(0,0);
+    tmpVector.insert(1,startingSigma);
     sigmaGraph.insert(0,tmpVector);
+    tmpVector.clear();
 
     int i = 1;
     tau.insert(0,0);
@@ -158,21 +163,23 @@ QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
         previousTauValue = tau.value(i-1);
         lambdas = switchingRegimeLambdas(numberOfIntervals,
                                      sigmaStep, volatility, startingSigma);
-        //qDebug("counting log");
 
-        delta = log(randomNumber(0,1))/lambdas[1];
+        delta = log(randomNumber(0,1))/lambdas.value(1);
         currentTauValue = previousTauValue + delta;
 
         previousTauValue = tau.value(i-1);
         setNextSigma(numberOfIntervals,sigmas,lambdas);
 
-        tmpVector[0] = currentTauValue;
-        tmpVector[1] = currentSigma;
+        tmpVector.insert(0,currentTauValue);
+        tmpVector.insert(1,currentSigma);
 
         tau.insert(i,currentTauValue);
         sigmaGraph.insert(i,tmpVector);
+        tmpVector.clear();
+
         i++;
     }
+
     return sigmaGraph;
 }
 

@@ -39,3 +39,32 @@ QVector <double> SignalGenerator::generateSwitchingRegimeNoise(
 
     return noise;
 }
+
+QVector <double> SignalGenerator::generateSwitchingRegimeSignal(QVector <double> noise,
+                                               double signalA,
+                                               double discretizationStep
+                                               ) {
+
+    QVector <double> signal;
+
+    std::default_random_engine generator;
+    QTime t = QTime::currentTime();
+    generator.seed(t.msec());
+
+    std::normal_distribution<double> distribution(0,1);
+
+    signal.insert(0,signal.value(0));
+
+    double prevYValue, currentYValue;
+
+
+    for (int k = 1; k < noise.size(); k++) {
+        prevYValue = signal.value(k-1);
+        currentYValue = prevYValue + signalA*noise.value(k)
+                *discretizationStep
+                + sqrt(discretizationStep)*distribution(generator);
+        signal.insert(k,currentYValue);
+    }
+
+    return signal;
+}
