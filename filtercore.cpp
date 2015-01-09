@@ -4,45 +4,45 @@ template <typename T>  class QVector;
 
 
 /**
- * @brief filtercore::filtercore
+ * @brief FilterCore::FilterCore
  * this class contains basic functions, that can be used both
  * in signal generation and while signal filtration.
  */
-filtercore::filtercore()
+FilterCore::FilterCore()
 {
     currentSigmaIndex = 0;
     currentSigma = 0;
 }
 
 /**
- * @brief filtercore::intRand returns integer from 0 to randMax
+ * @brief FilterCore::intRand returns integer from 0 to randMax
  * @param int randMax
  * @return int
  */
-int filtercore::intRand(int randMax)
+int FilterCore::intRand(int randMax)
 {
-    double randNumber = filtercore::randomNumber(0,randMax);
+    double randNumber = FilterCore::randomNumber(0,randMax);
     return ceil(randNumber);
 }
 
 /**
- * @brief filtercore::randomNumber returns random double value from randMin to randMax
+ * @brief FilterCore::randomNumber returns random double value from randMin to randMax
  * @param randMin
  * @param randMax
  * @return double
  */
-double filtercore::randomNumber(double randMin, double randMax){
+double FilterCore::randomNumber(double randMin, double randMax){
     double randNumber = randMin + (randMax - randMin)*(qrand() / static_cast<double>( RAND_MAX ));
     return randNumber;
 }
 
 /**
- * @brief filtercore::normalDistribution returns normal distributed random variable. Parameters can be set
+ * @brief FilterCore::normalDistribution returns normal distributed random variable. Parameters can be set
  * @param mu
  * @param sigma
  * @return double
  */
-double filtercore::normalDistribution(double mu, double sigma) {
+double FilterCore::normalDistribution(double mu, double sigma) {
 
     std::default_random_engine generator;
     std::normal_distribution<double> distribution(mu,sigma);
@@ -53,12 +53,12 @@ double filtercore::normalDistribution(double mu, double sigma) {
 }
 
 /**
- * @brief filtercore::setNextSigma
+ * @brief FilterCore::setNextSigma
  * @param numberOfIntervals
  * @param sigmaVector
  * @param lambdas
  */
-void filtercore::setNextSigma(  int numberOfIntervals,
+void FilterCore::setNextSigma(  int numberOfIntervals,
                     QVector <double> sigmaVector,
                     QVector <double> lambdas){
 
@@ -85,7 +85,7 @@ void filtercore::setNextSigma(  int numberOfIntervals,
 }
 
 
-QVector <double> filtercore::switchingRegimeLambdas(int k,
+QVector <double> FilterCore::switchingRegimeLambdas(int k,
                              double h, double g, double startingSigma){
 
     QVector <double> res(3);
@@ -116,7 +116,7 @@ QVector <double> filtercore::switchingRegimeLambdas(int k,
 }
 
 
-QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
+QVector <QVector<double> > FilterCore::switchingRegimeSigmaGenerator(
         double lowerSigma,
         double sigmaStep,
         int numberOfIntervals, //between lower and higher sigma
@@ -125,11 +125,9 @@ QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
         ){
 
     QVector <QVector<double> > sigmaGraph;
-//    QVector <double> tmpVector(2);
     QVector <double> tmpVector;
     QVector <double> tau;
     QVector <double> lambdas;
-    //QVector <double> sigmas(numberOfIntervals+1);
     QVector <double> sigmas;
 
     double delta;
@@ -137,20 +135,16 @@ QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
     double previousTauValue;
 
     for (int i=0; i<=numberOfIntervals; i++){
-        //sigmas[i] = lowerSigma + i * sigmaStep;
         sigmas.insert(i,lowerSigma + i * sigmaStep);
     }
 
     currentSigmaIndex = intRand(numberOfIntervals)+1;
-    //currentSigma = sigmas[currentSigmaIndex];
     currentSigma = sigmas.value(currentSigmaIndex);
 
     double startingSigma = lowerSigma + (sigmaStep*currentSigmaIndex);
 
     currentTauValue = 0;
 
-//    tmpVector[0] = 0;
-//    tmpVector[1] = startingSigma;
     tmpVector.insert(0,0);
     tmpVector.insert(1,startingSigma);
     sigmaGraph.insert(0,tmpVector);
@@ -166,6 +160,10 @@ QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
 
         delta = log(randomNumber(0,1))/lambdas.value(1);
         currentTauValue = previousTauValue + delta;
+
+        if (currentTauValue > exitCondition) {
+            currentTauValue = exitCondition;
+        }
 
         previousTauValue = tau.value(i-1);
         setNextSigma(numberOfIntervals,sigmas,lambdas);
@@ -183,7 +181,7 @@ QVector <QVector<double> > filtercore::switchingRegimeSigmaGenerator(
     return sigmaGraph;
 }
 
-double filtercore::getSignalMin(QVector <double> V){
+double FilterCore::getSignalMin(QVector <double> V){
     double min = V.value(0);
     for (int i=0; i<V.size(); i++)
     {
@@ -193,7 +191,7 @@ double filtercore::getSignalMin(QVector <double> V){
     return min;
 }
 
-double filtercore::getSignalMax(QVector <double> V){
+double FilterCore::getSignalMax(QVector <double> V){
     double max = V.value(0);
     for (int i=0; i<V.size(); i++)
     {

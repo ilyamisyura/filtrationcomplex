@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     filtercore.cpp \
     signalgenerator.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    signalprocessor.cpp
 
 HEADERS  += mainwindow.h \
     filtercore.h \
     signalgenerator.h \
-    qcustomplot.h
+    qcustomplot.h \
+    signalprocessor.h
 
 FORMS    += mainwindow.ui
 

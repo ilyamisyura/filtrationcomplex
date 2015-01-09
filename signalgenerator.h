@@ -17,10 +17,19 @@ public:
             double startingValue,
             double noiseA);
 
-    QVector <double> generateSwitchingRegimeSignal(QVector <double> noise,
-                                                   double signalA,
-                                                   double discretizationStep
-                                                   );
+    QVector <double> generateSwitchingRegimeSignalPart(
+           QVector <double> noise,
+           double signalA,
+           double discretizationStep
+           );
+
+    QVector <double> generateSwitchingRegimeSignal(
+            QVector <QVector<double> > tauAndSigmas,
+            double noiseGeneratorParam,
+            double signalGeneratorParam,
+            double exitCondition,
+            double discretizationStep
+            );
 };
 
 #endif // SIGNALGENERATOR_H

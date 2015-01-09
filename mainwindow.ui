@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>689</width>
+    <width>938</width>
     <height>684</height>
    </rect>
   </property>
@@ -17,9 +17,9 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>0</y>
-      <width>671</width>
+      <width>921</width>
       <height>251</height>
      </rect>
     </property>
@@ -548,6 +548,171 @@
        <string>Filter</string>
       </property>
      </widget>
+     <widget class="QGroupBox" name="graphicsGroupBox">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>0</y>
+        <width>241</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Graphics</string>
+      </property>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>91</width>
+         <height>101</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Original signal</string>
+       </property>
+       <widget class="QCheckBox" name="signalSigmaCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>40</y>
+          <width>87</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Sigma</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="signalNoiseCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>60</y>
+          <width>87</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Noise</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="signalCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>80</y>
+          <width>87</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Signal</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>20</y>
+         <width>120</width>
+         <height>101</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Estimations</string>
+       </property>
+       <widget class="QSpinBox" name="spinBox">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>20</y>
+          <width>49</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Number</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="estimationSigmaCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>40</y>
+          <width>87</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Sigma</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="estimationGammaCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>60</y>
+          <width>87</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Gamma</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="estimationCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>80</y>
+          <width>87</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Estimation</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QCheckBox" name="filteredSignalCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>150</y>
+         <width>121</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Filtered signal</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </widget>
    <widget class="QCustomPlot" name="plot" native="true">
@@ -555,7 +720,7 @@
      <rect>
       <x>10</x>
       <y>260</y>
-      <width>671</width>
+      <width>921</width>
       <height>361</height>
      </rect>
     </property>
@@ -566,7 +731,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>689</width>
+     <width>938</width>
      <height>22</height>
     </rect>
    </property>

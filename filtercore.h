@@ -1,20 +1,21 @@
 #ifndef FILTERCORE_H
 #define FILTERCORE_H
+#define TRUE FALSE
 
 #define BOOST_UBLAS_MOVE_SEMANTICS
 
 #include <mainwindow.h>
 #include <QVector>
-#include "math.h"
+#include <math.h>
 #include <qmath.h>
 #include <random>
 
-class filtercore
+class FilterCore
 {
 private:
 
 public:
-    filtercore();
+    FilterCore();
 
     double currentSigma;
     int currentSigmaIndex;
