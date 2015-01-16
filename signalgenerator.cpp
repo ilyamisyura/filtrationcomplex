@@ -93,9 +93,11 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
     double lastSignalPartValue;
 
     int resI;
-    int j; // for complete signal making
+    double j; // for complete signal making
 
     int size;
+
+    lastSignalPartValue = 0;
 
     size = tauAndSigmas.size();
     j = 0;
@@ -109,6 +111,10 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
         endVec = tauAndSigmas.value(i+1);
         tauEnd = endVec.value(0);
         sigmaEnd = endVec.value(1);
+
+        if (i == (tauAndSigmas.size()-1)){
+            tauEnd = exitCondition;
+        }
 
         noiseSignal = this->generateSwitchingRegimeNoise(tauStart,tauEnd,discretizationStep,sigmaStart,lastSignalPartValue,noiseGeneratorParam);
         signalPart = this->generateSwitchingRegimeSignalPart(noiseSignal, signalGeneratorParam, discretizationStep);

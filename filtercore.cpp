@@ -201,4 +201,20 @@ double FilterCore::getSignalMax(QVector <double> V){
     return max;
 }
 
+double FilterCore::getTwoSignalsMin(QVector <double> signal1,QVector <double> signal2){
+    double min1, min2, res;
+    min1 = this->getSignalMin(signal1);
+    min2 = this->getSignalMin(signal2);
+    res = fmin(min1,min2);
+    return res;
+}
+
+double FilterCore::getTwoSignalsMax(QVector <double> signal1,QVector <double> signal2){
+    double max1, max2, res;
+    max1 = this->getSignalMax(signal1);
+    max2 = this->getSignalMax(signal2);
+    res = fmax(max1,max2);
+    return res;
+}
+
 

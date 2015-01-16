@@ -19,7 +19,8 @@ Graph::Graph(){
 
 void Graph::setPen(QPen pen) {
     Graph::pen = pen;
-    if (plotIsConnected){
+    if (plotIsConnected && graphNumIsSet){
+        this->connectedPlot->graph(this->graphNum)->setPen(this->pen);
         this->connectedPlot->replot();
     }
 }
@@ -27,14 +28,14 @@ void Graph::setPen(QPen pen) {
 void Graph::show(){
     this->visible = true;
     if (plotIsConnected){
-        this->connectedPlot->replot();
+        this->sendDataToPlot();
     }
 }
 
 void Graph::hide(){
     this->visible = false;
     if (plotIsConnected){
-        this->connectedPlot->replot();
+        this->sendDataToPlot();
     }
 }
 
@@ -84,7 +85,10 @@ double sigmaEnd;
 int graphI;
 
 namespace common {
-    QVector <QVector <double> > signalsVector;
+    QVector <double> signalVector;
+    QVector <double> sigmaVector;
+    QVector <double> filteredSignalVector;
+    QVector <double> xAxis;
 }
 
 namespace switchingRegimeInputs {
@@ -114,9 +118,15 @@ namespace switchingRegimeInputs {
 }
 
 namespace signalGraph {
-   bool showSigma = true;
-   bool showNoise = false;
-   bool show = true;
+    Graph sigma;
+    Graph noise;
+    Graph signal;
+}
+
+namespace filteredSignalGraph {
+    Graph estimation;
+    Graph sigma;
+    Graph signal;
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -136,34 +146,27 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupPlot()
 {
-  // The following plot setup is mostly taken from the plot demos:
-  ui->plot->addGraph();
-  ui->plot->graph()->setPen(QPen(Qt::blue));
-  ui->plot->addGraph();
-  ui->plot->graph()->setPen(QPen(Qt::red));
-  ui->plot->addGraph();
-  ui->plot->graph()->setPen(QPen(Qt::black));
+    //Main signal graphs
+    ui->plot->addGraph();
+    signalGraph::sigma.connectWithPlot(ui->plot);
+    signalGraph::sigma.setGraphNum(0);
+
+    ui->plot->addGraph();// for noise, now unused
+
+    ui->plot->addGraph();
+    signalGraph::signal.connectWithPlot(ui->plot);
+    signalGraph::signal.setGraphNum(2);
+
+    ui->plot->addGraph();
+    filteredSignalGraph::estimation.connectWithPlot(ui->plot);
+    filteredSignalGraph::estimation.setGraphNum(3);
+//  ui->plot->graph()->setPen(QPen(Qt::black));
 }
 
 void MainWindow::on_switchingRegimeGeneratorButton_clicked()
 {
 
     using namespace switchingRegimeInputs;
-
-    common::signalsVector.clear();
-
-    QVector <double> swy;
-
-    QVector <double> signalY;
-
-    signalY.clear();
-
-    QVector <double> filteredSignal;
-    QVector <double> filteredGraph;
-    QVector <double> noiseGraph;
-
-    QVector <double> gammaPart;
-    QVector <double> gammaSignal;
 
     bool ok;
     int resErr = 0;
@@ -191,6 +194,7 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     exitCondition = ui->exitConditionLineEdit->text().toDouble(&ok);
     if (!ok)
         resErr=1;
+    ui->plot->xAxis->setRange(0,exitCondition);
 
     startingValueMu = ui->startingValueMuLineEdit->text().toDouble(&ok);
     if (!ok)
@@ -208,164 +212,89 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     if (!ok)
         resErr=1;
 
-    QVector <double> noiseSignal; //noise (X)
-    QVector <double> unfilteredSignal; //signal with noise (Y)
 
+    tauAndSigmas.clear();
     tauAndSigmas = core.switchingRegimeSigmaGenerator(lowerSigma,sigmaStep,numberOfIntervals,volatility,exitCondition);
 
-//    int size = tauAndSigmas.size();
+    int size;
+    size= tauAndSigmas.size();
 
-//    unfilteredSignal.clear();
-//    unfilteredSignal.insert(0,1);
+    double j;
+    j = 0;
+    int graphI;
+    graphI = 0;
 
-//    /**
-//     * @todo reset to normal distribution value
-//     */
-//    double lastSignalPartValue = 0;
+    common::sigmaVector.clear();
 
-//    double j = 0;
+    for (int i=0; i<=size-1; i++){
+        startVec = tauAndSigmas.value(i);
+        double sigmaStart = startVec.value(1);
 
-//    for (int i=0; i<=size-1; i++){
+        end.clear();
+        end = tauAndSigmas.value(i+1);
+        tauEnd = end.value(0);
+        sigmaEnd = end.value(1);
 
-//        startVec.clear();
-//        unfilteredSignal.clear();
-//        noiseSignal.clear();
+        while ((j+discretizationStep < tauEnd)&&(j < exitCondition)) {
+            common::xAxis.insert(graphI, j);
+            common::sigmaVector.insert(graphI, sigmaStart);
+            graphI++;
+            j+= discretizationStep;
+        }
+    }
 
-//        startVec = tauAndSigmas.value(i);
-//        double tauStart = startVec.value(0);
-//        double sigmaStart = startVec.value(1);
+    signalGraph::sigma.setXAxis(common::xAxis);
+    signalGraph::sigma.setYAxis(common::sigmaVector);
+    signalGraph::sigma.sendDataToPlot();
 
-//        end.clear();
-//        end = tauAndSigmas.value(i+1);
-//        tauEnd = end.value(0);
-//        sigmaEnd = end.value(1);
+    common::signalVector.clear();
+    common::signalVector = generator.generateSwitchingRegimeSignal(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep);
 
-//        noiseSignal = generator.generateSwitchingRegimeNoise(tauStart,tauEnd,discretizationStep,sigmaStart,lastSignalPartValue,noiseGeneratorParam);
-//        unfilteredSignal = generator.generateSwitchingRegimeSignal(noiseSignal, signalGeneratorParam, discretizationStep);
-//        signalsVector.push_back(unfilteredSignal);
+    ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-1,
+                               core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+1);
 
-//        lastSignalPartValue = unfilteredSignal.value(unfilteredSignal.size()-1);
-
-//        int signalI = 0;
-
-//        graphI = 0;
-
-//        while ((j+discretizationStep < tauEnd)&&(j < exitCondition)) {
-//            swx.insert(graphI, j);
-//            swy.insert(graphI, sigmaStart);
-//            signalY.insert(graphI,unfilteredSignal.value(signalI));
-//            signalI++;
-//            gammaSignal.insert(graphI,gammaPart.value(signalI));
-//            noiseGraph.insert(graphI,noiseSignal.value(signalI));
-//            filteredGraph.insert(graphI,filteredSignal.value(signalI));
-//            graphI++;
-//            j+= discretizationStep;
-//        }
-
-////        qDebug("j end = %f,",j);
-////        qDebug("tau start = %f, tau end = %f",tauStart,tauEnd);
-//    }
-
-//    double signalMin = core.getSignalMin(signalY);
-//    double signalMax = core.getSignalMax(signalY);
-
-//    double sigmaMax = core.getSignalMax(swy);
-
-//    double graphMin = fmin(signalMin, lowerSigma);
-//    double graphMax = fmax(signalMax, sigmaMax);
-
-//    /**
-//     * @todo comment in future
-//     */
-
-////    double gammaMin = core.getSignalMax(gammaSignal);
-////    double gammaMax = core.getSignalMax(gammaSignal);
-////    graphMin = fmin(graphMin,gammaMin);
-////    graphMax = fmax(graphMax,gammaMax);
-
-
-////    qDebug("lower sigma: %f", lowerSigma);
-////    qDebug("higher sigma: %f", lowerSigma + sigmaStep*numberOfIntervals);
-////    qDebug("signal min: %f", signalMin);
-////    qDebug("signal max: %f", signalMax);
-////    qDebug("GrapMin: %f", graphMin);
-////    qDebug("GrapMax: %f", graphMax);
-
-//    QPen redBoldPen;
-//    redBoldPen.setWidth(2);
-//    redBoldPen.setColor(QColor(255,0,0));
-
-//    QPen blueBoldPen;
-//    blueBoldPen.setWidth(2);
-//    blueBoldPen.setColor(QColor(0,0,255));
-
-//    QPen blackBoldPen;
-//    blackBoldPen.setWidth(1);
-//    blackBoldPen.setColor(QColor(0,0,0));
-
-//    ui->plot->graph(0)->setData(swx,swy);
-//    ui->plot->graph(0)->setPen(blueBoldPen);
-
-//    ui->plot->graph(1)->setData(swx,signalY);
-//    ui->plot->graph(1)->setPen(redBoldPen);
-
-//    ui->plot->graph(2)->clearData();
-////    ui->plot->graph(2)->setData(swx,noiseGraph);
-////    ui->plot->graph(2)->setPen(blackBoldPen);
-
-////    ui->plot->graph(2)->setData(swx,filteredGraph);
-////    ui->plot->graph(2)->setPen(blackBoldPen);
-
-//    ui->plot->xAxis->setRange(0,exitCondition);
-//    ui->plot->yAxis->setRange(graphMin-1, graphMax-graphMin+1);
-
-//    ui->plot->replot();
-
-//    filteredSignal.clear();
-//    filteredGraph.clear();
-//    noiseGraph.clear();
-//    noiseSignal.clear();
-//    unfilteredSignal.clear();
-//    swx.clear();
+    signalGraph::signal.setXAxis(common::xAxis);
+    signalGraph::signal.setYAxis(common::signalVector);
+    QPen *pen = new QPen;
+    pen->setWidth(2);
+    pen->setColor(QColor(255,0,0));
+    signalGraph::signal.setPen(*pen);
+    delete pen;
+    signalGraph::signal.sendDataToPlot();
 }
 
 void MainWindow::on_switchingRegimeFilterButton_clicked()
 {
-    QVector <double> filteredSignal;
-    QVector <double> filteredGraph;
-    QVector <double> currentSignalPart;
-
     using namespace switchingRegimeInputs;
 
-    double j=0, graphI=0; // X axis value;
+    QVector <QVector <double>> filtrationTauAndSigmas;
+    QVector <double> currentEstimation;
 
-    QVector <QVector <double>> debugSigmas = tauAndSigmas;
+    filtrationTauAndSigmas = core.switchingRegimeSigmaGenerator(lowerSigma,sigmaStep,numberOfIntervals,volatility,exitCondition);
 
-    for (int i=0; i<=tauAndSigmas.size()-1; i++){
-        startVec = tauAndSigmas.value(i);
-        double tauStart = startVec.value(0);
-        double sigmaStart = startVec.value(1);
+    currentEstimation = processor.switchingRegimeFilter(common::signalVector, filtrationTauAndSigmas, discretizationStep, signalGeneratorParam, noiseGeneratorParam);
 
-        if (tauStart>exitCondition) {
-            break;
-        }
+    filteredSignalGraph::estimation.setXAxis(common::xAxis);
+    filteredSignalGraph::estimation.setYAxis(currentEstimation);
+    filteredSignalGraph::estimation.sendDataToPlot();
 
-        currentSignalPart = signalsVector.value(i);
 
-        filteredSignal = processor.switchingRegimeFilter(currentSignalPart,tauStart,sigmaStart,discretizationStep,signalGeneratorParam,noiseGeneratorParam);
+}
 
-        for (int k=0; k<filteredSignal.size(); k++) {
-            swx.insert(graphI,j);
-            filteredGraph.insert(graphI,filteredSignal.value(k));
-            graphI++;
-            j+= discretizationStep;
-        }
-
-        filteredSignal.clear();
+void MainWindow::on_signalSigmaCheckBox_clicked()
+{
+    if (ui->signalSigmaCheckBox->isChecked()) {
+        signalGraph::sigma.show();
+    } else {
+        signalGraph::sigma.hide();
     }
+}
 
-    ui->plot->graph(2)->setData(swx,filteredGraph);
-    ui->plot->replot();
-    filteredGraph.clear();
-    //    ui->plot->graph(2)->setPen(blackBoldPen);
+void MainWindow::on_signalCheckBox_clicked()
+{
+    if (ui->signalCheckBox->isChecked()) {
+        signalGraph::signal.show();
+    } else {
+        signalGraph::signal.hide();
+    }
 }

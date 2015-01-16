@@ -42,6 +42,9 @@ public:
     double getSignalMin(QVector <double> V);
 
     double getSignalMax(QVector <double> V);
+
+    double getTwoSignalsMin(QVector <double> signal1,QVector <double> signal2);
+    double getTwoSignalsMax(QVector <double> signal1,QVector <double> signal2);
 };
 
 #endif // CORE_H

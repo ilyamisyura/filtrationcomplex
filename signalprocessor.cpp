@@ -95,38 +95,52 @@ double SignalProcessor::generateGammaValue(
 
 double SignalProcessor::countIntegralH(double lower,double higher,double integrationStep)
 {
-    double sum = 0;
+    double sum;
+    double j;
+    int N;
 
-    int N = (higher - lower)/integrationStep;
+    sum = switchingRegimeFunctionH(lower);
 
-    sum+= switchingRegimeFunctionH(lower)/2 * integrationStep;
+    N = (higher - lower)/integrationStep;
+
+    j = lower + integrationStep;
 
     for (int i = 1; i < N; i++){
-
+        sum+= switchingRegimeFunctionH(j);
+        j+= integrationStep;
     }
+
+    sum = sum*2;
+    sum+= switchingRegimeFunctionH(j);
+    sum = sum*(integrationStep/2);
+
+    return sum;
 }
 
 QVector <double> SignalProcessor::switchingRegimeFilter(
             QVector <double> signal,
-            double start,
-            double sigma,
+            QVector <QVector <double> > tauAndSigmas,
             double discretizationStep,
             double signalGenerationParam, //A
             double noiseGenerationParam //a
         )
 {
 
-    QVector <double> result;
-    result.insert(0,signal.value(0));
+    QVector <double> currentSigmaPart;
+    double currentSigma;
+    double tauStart;
+    double tauEnd;
 
-    int n; //number of steps
-    n = signal.size();
+    QVector <double> result;
+
+    int ns; // number of sigma parts
+    ns = tauAndSigmas.size();
 
     double member1, member2, member3;
 
     double s; //time between current time and previous time
-    double t = start; //current time
-    double integrationStep = discretizationStep/10; //for integral counting
+    double t; //current time
+    double integrationStep = discretizationStep/20; //for integral counting
 
     double prevSignalValue;
     double currSignalValue;
@@ -135,38 +149,65 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
     double firstIntegral;
     double secondIntegral;
 
-    member1 = result.value(0);
+    int resI;
+    int i;
 
-    for (int i = 1; i<n; i++) {
+    resI = 0;
 
+    qDebug("Here we have dem tau with %d parts", ns);
+    for (int k=0; k<ns; k++){
+        currentSigmaPart = tauAndSigmas.value(k);
+        currentSigma = currentSigmaPart.value(1);
+        tauStart = currentSigmaPart.value(0);
+        qDebug("%d: %f",k,tauStart);
+        tauEnd = tauAndSigmas.value(k+1).value(0);
     }
 
-    qDebug("===================Starting filtration===================");
-    qDebug("Start at %f", start);
-    qDebug("Member 1     |     Member 2    |      Member 3");
+    qDebug("starting to parse Tau and Sigmas vector");
+    for (int k=0; k<ns; k++){
+        currentSigmaPart = tauAndSigmas.value(k);
+        currentSigma = currentSigmaPart.value(1);
+        tauStart = currentSigmaPart.value(0);
+        tauEnd = tauAndSigmas.value(k+1).value(0);
+        qDebug("%d: %f",tauStart,tauEnd);
+        t = tauStart;
 
-    for (int i = 1; i<n; i++) {
-        prevSignalValue = signal.value(i-1);
-        currSignalValue = signal.value(i);
-        t+= discretizationStep;
+        int np = currentSigmaPart.size();
 
-        s = ((start + (i*discretizationStep)) + (start + ((i-1)*discretizationStep))/2);
-//            qDebug("Time moment: %f", s);
-        setFunctionHParameters(start,sigma,noiseGenerationParam,signalGenerationParam);
-        secondIntegral = countIntegralH(start, t, integrationStep);
-        member3 = exp(secondIntegral);
+        result.insert(resI,signal.value(resI));
+        member1 = result.value(resI);
 
-        firstIntegral = countIntegralH(start, s, integrationStep);
+        i = 0;
 
-        setFunctionFParameters(start,sigma,noiseGenerationParam,signalGenerationParam);
+        //for (int i=0; i<np; i++){
+        while (t < tauEnd) {
+            resI++;
+            t+= discretizationStep;
 
-        member2 = exp(firstIntegral)*switchingRegimeFunctionF(s) * (currSignalValue-prevSignalValue);
+            prevSignalValue = signal.value(resI-1);
+            currSignalValue = signal.value(resI);
 
-        resultSum = (member1+member2)*member3;
+            s = ((tauStart + (i*discretizationStep)) + (tauStart + ((i-1)*discretizationStep))/2);
 
-        qDebug("%f | %f | %f", member1, member2, member3);
+            setFunctionHParameters(tauStart,currentSigma,noiseGenerationParam,signalGenerationParam);
+            secondIntegral = countIntegralH(tauStart, t, integrationStep);
+            member3 = exp(secondIntegral);
 
-        result.insert(i,resultSum);
+            firstIntegral = countIntegralH(tauStart, s, integrationStep);
+
+            setFunctionFParameters(tauStart,currentSigma,noiseGenerationParam,signalGenerationParam);
+
+            member2 = exp(firstIntegral)*switchingRegimeFunctionF(s) * (currSignalValue-prevSignalValue);
+
+            resultSum = (member1+member2)*member3;
+
+//            qDebug("%f | %f | %f", member1, member2, member3);
+
+            result.insert(resI,resultSum);
+
+            i++;
+        }
+        qDebug("%d iterations made",i);
     }
 
     return result;

@@ -22,6 +22,10 @@ private slots:
 
     void on_switchingRegimeFilterButton_clicked();
 
+    void on_signalSigmaCheckBox_clicked();
+
+    void on_signalCheckBox_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

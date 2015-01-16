@@ -44,8 +44,7 @@ public:
 
     QVector <double> switchingRegimeFilter(
                 QVector <double> signal,
-                double start,
-                double sigma,
+                QVector <QVector <double> > tauAndSigmas,
                 double discretizationStep,
                 double signalGenerationParam, //A
                 double noiseGenerationParam //a
@@ -57,5 +56,7 @@ public:
                 double integrationStep
             );
 };
+
+//============================================================================
 
 #endif // SIGNALPROCESSOR_H
