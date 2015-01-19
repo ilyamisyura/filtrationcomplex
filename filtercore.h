@@ -33,7 +33,8 @@ public:
             double sigmaStep,
             int numberOfIntervals, //between lower and higher sigma
             double volatility,
-            double exitCondition
+            double exitCondition,
+            double discretizationStep
             );
 
     QVector <double> switchingRegimeLambdas(int k,

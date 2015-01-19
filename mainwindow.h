@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "qcustomplot.h"
+#include <QtConcurrent>
+#include <QThread>
 
 namespace Ui {
 class MainWindow;
@@ -62,6 +64,8 @@ public:
     void setYAxis(QVector <double> y);
 
     bool readyForPlot();
+
+    void clearData();
 
     void sendDataToPlot();
 

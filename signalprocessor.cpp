@@ -140,7 +140,7 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
     double s; //time between current time and previous time
     double t; //current time
-    double integrationStep = discretizationStep/20; //for integral counting
+    double integrationStep = discretizationStep/100; //for integral counting
 
     double prevSignalValue;
     double currSignalValue;
@@ -154,7 +154,11 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
     resI = 0;
 
-    qDebug("Here we have dem tau with %d parts", ns);
+
+    qDebug("=========================================================");
+    qDebug("NEW FILTRATION");
+    qDebug("=========================================================");
+//    qDebug("Here we have dem tau with %d parts", ns);
     for (int k=0; k<ns; k++){
         currentSigmaPart = tauAndSigmas.value(k);
         currentSigma = currentSigmaPart.value(1);
@@ -162,14 +166,14 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
         qDebug("%d: %f",k,tauStart);
         tauEnd = tauAndSigmas.value(k+1).value(0);
     }
-
-    qDebug("starting to parse Tau and Sigmas vector");
+//    qDebug("===========================");
+//    qDebug("starting to parse Tau and Sigmas vector");
     for (int k=0; k<ns; k++){
         currentSigmaPart = tauAndSigmas.value(k);
         currentSigma = currentSigmaPart.value(1);
         tauStart = currentSigmaPart.value(0);
         tauEnd = tauAndSigmas.value(k+1).value(0);
-        qDebug("%d: %f",tauStart,tauEnd);
+//        qDebug("%f: %f",tauStart,tauEnd);
         t = tauStart;
 
         int np = currentSigmaPart.size();
@@ -180,7 +184,7 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
         i = 0;
 
         //for (int i=0; i<np; i++){
-        while (t < tauEnd) {
+        while (t < tauEnd-discretizationStep) {
             resI++;
             t+= discretizationStep;
 
@@ -207,7 +211,7 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
             i++;
         }
-        qDebug("%d iterations made",i);
+//        qDebug("%d iterations made",i);
     }
 
     return result;

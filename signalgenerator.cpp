@@ -62,6 +62,9 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignalPart(QVector <dou
         currentYValue = prevYValue + signalA*noise.value(k)
                 *discretizationStep
                 + sqrt(discretizationStep)*distribution(generator);
+        if (currentYValue == 0){
+            qDebug("ZERO MAZAFAKA!!! At %d: noise value %f", k, noise.value(k));
+        }
         signal.insert(k,currentYValue);
     }
 

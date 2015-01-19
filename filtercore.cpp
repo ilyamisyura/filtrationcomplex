@@ -32,7 +32,8 @@ int FilterCore::intRand(int randMax)
  * @return double
  */
 double FilterCore::randomNumber(double randMin, double randMax){
-    double randNumber = randMin + (randMax - randMin)*(qrand() / static_cast<double>( RAND_MAX ));
+    double randNumber;
+    randNumber= randMin + (randMax - randMin)*(qrand() / static_cast<double>( RAND_MAX ));
     return randNumber;
 }
 
@@ -121,7 +122,8 @@ QVector <QVector<double> > FilterCore::switchingRegimeSigmaGenerator(
         double sigmaStep,
         int numberOfIntervals, //between lower and higher sigma
         double volatility,
-        double exitCondition
+        double exitCondition,
+        double discretizationStep
         ){
 
     QVector <QVector<double> > sigmaGraph;
@@ -133,6 +135,7 @@ QVector <QVector<double> > FilterCore::switchingRegimeSigmaGenerator(
     double delta;
     double currentTauValue;
     double previousTauValue;
+    double roundedTauValue;
 
     for (int i=0; i<=numberOfIntervals; i++){
         sigmas.insert(i,lowerSigma + i * sigmaStep);
@@ -144,6 +147,7 @@ QVector <QVector<double> > FilterCore::switchingRegimeSigmaGenerator(
     double startingSigma = lowerSigma + (sigmaStep*currentSigmaIndex);
 
     currentTauValue = 0;
+
 
     tmpVector.insert(0,0);
     tmpVector.insert(1,startingSigma);
@@ -160,6 +164,12 @@ QVector <QVector<double> > FilterCore::switchingRegimeSigmaGenerator(
 
         delta = log(randomNumber(0,1))/lambdas.value(1);
         currentTauValue = previousTauValue + delta;
+
+        roundedTauValue = 0;
+        while (roundedTauValue < currentTauValue) {
+            roundedTauValue+= discretizationStep;
+        }
+        currentTauValue = roundedTauValue;
 
         if (currentTauValue > exitCondition) {
             currentTauValue = exitCondition;
