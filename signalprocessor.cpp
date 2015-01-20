@@ -155,15 +155,15 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
     resI = 0;
 
 
-    qDebug("=========================================================");
-    qDebug("NEW FILTRATION");
-    qDebug("=========================================================");
+//    qDebug("=========================================================");
+//    qDebug("NEW FILTRATION");
+//    qDebug("=========================================================");
 //    qDebug("Here we have dem tau with %d parts", ns);
     for (int k=0; k<ns; k++){
         currentSigmaPart = tauAndSigmas.value(k);
         currentSigma = currentSigmaPart.value(1);
         tauStart = currentSigmaPart.value(0);
-        qDebug("%d: %f",k,tauStart);
+//        qDebug("%d: %f",k,tauStart);
         tauEnd = tauAndSigmas.value(k+1).value(0);
     }
 //    qDebug("===========================");
@@ -183,7 +183,6 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
         i = 0;
 
-        //for (int i=0; i<np; i++){
         while (t < tauEnd-discretizationStep) {
             resI++;
             t+= discretizationStep;
@@ -205,13 +204,10 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
             resultSum = (member1+member2)*member3;
 
-//            qDebug("%f | %f | %f", member1, member2, member3);
-
             result.insert(resI,resultSum);
 
             i++;
         }
-//        qDebug("%d iterations made",i);
     }
 
     return result;

@@ -164,12 +164,12 @@ void MainWindow::setupPlot()
     filteredSignalGraph::estimation.setGraphNum(3);
 
     ui->plot->addGraph();
-    filteredSignalGraph::sigma.connectWithPlot(ui->plot);
-    filteredSignalGraph::sigma.setGraphNum(4);
+    filteredSignalGraph::signal.connectWithPlot(ui->plot);
+    filteredSignalGraph::signal.setGraphNum(4);
     QPen *pen = new QPen;
     pen->setWidth(3);
     pen->setColor(QColor(0,0,0));
-    filteredSignalGraph::sigma.setPen(*pen);
+    filteredSignalGraph::signal.setPen(*pen);
     delete pen;
 //  ui->plot->graph()->setPen(QPen(Qt::black));
 }
@@ -272,10 +272,6 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     signalGraph::signal.setPen(*pen);
     delete pen;
     signalGraph::signal.sendDataToPlot();
-
-    filteredSignalGraph::estimation.clearData();
-    filteredSignalGraph::sigma.clearData();
-
 }
 
 void MainWindow::on_switchingRegimeFilterButton_clicked()
@@ -287,7 +283,8 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
 
     int threadNum;
 
-    threadNum = 100;
+//    threadNum = 100;
+    threadNum = ui->threadsSpinBox->value();
 
     QVector <QFuture <QVector <double> > > futureEstimationsVector;
     QFuture <QVector <double> > currentFuture;
@@ -326,45 +323,14 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
 
     for (int i=0;i<currentEstimation.size();i++){
         finalEstimationValue = currentEstimation.value(i);
-        currentEstimation.replace(i,finalEstimationValue/threadNum);
+        currentEstimation.replace(i,common::signalVector.value(i) - finalEstimationValue/threadNum);
     }
 
 //    currentEstimation = processor.switchingRegimeFilter(common::signalVector, filtrationTauAndSigmas, discretizationStep, signalGeneratorParam, noiseGeneratorParam);
 
-    filteredSignalGraph::estimation.setXAxis(common::xAxis);
-    filteredSignalGraph::estimation.setYAxis(currentEstimation);
-    filteredSignalGraph::estimation.sendDataToPlot();
-
-    double j;
-    double estimationSigmaStart;
-    int graphI;
-    int size;
-    size = filtrationTauAndSigmas.size();
-    j = 0;
-    graphI = 0;
-    QVector <double> estimationSigmaVector;
-    QVector <double> estimationStartVector;
-    QVector <double> estimationEndVector;
-
-
-    for (int i=0; i<=size-1; i++){
-        estimationStartVector = filtrationTauAndSigmas.value(i);
-        estimationSigmaStart = estimationStartVector.value(1);
-
-        estimationEndVector = tauAndSigmas.value(i+1);
-        tauEnd = estimationEndVector.value(0);
-        sigmaEnd = estimationEndVector.value(1);
-
-        while ((j+discretizationStep < tauEnd)&&(j < exitCondition)) {
-            estimationSigmaVector.insert(graphI, estimationSigmaStart);
-            graphI++;
-            j+= discretizationStep;
-        }
-    }
-
-    filteredSignalGraph::sigma.setXAxis(common::xAxis);
-    filteredSignalGraph::sigma.setYAxis(estimationSigmaVector);
-    filteredSignalGraph::sigma.sendDataToPlot();
+    filteredSignalGraph::signal.setXAxis(common::xAxis);
+    filteredSignalGraph::signal.setYAxis(currentEstimation);
+    filteredSignalGraph::signal.sendDataToPlot();
 }
 
 void MainWindow::on_signalSigmaCheckBox_clicked()
@@ -382,5 +348,14 @@ void MainWindow::on_signalCheckBox_clicked()
         signalGraph::signal.show();
     } else {
         signalGraph::signal.hide();
+    }
+}
+
+void MainWindow::on_filteredSignalCheckBox_clicked()
+{
+    if (ui->filteredSignalCheckBox->isChecked()) {
+        filteredSignalGraph::signal.show();
+    } else {
+        filteredSignalGraph::signal.hide();
     }
 }

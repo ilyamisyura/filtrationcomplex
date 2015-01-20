@@ -630,11 +630,11 @@
        <property name="title">
         <string>Estimations</string>
        </property>
-       <widget class="QSpinBox" name="spinBox">
+       <widget class="QSpinBox" name="threadsSpinBox">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>20</y>
+          <x>0</x>
+          <y>40</y>
           <width>49</width>
           <height>24</height>
          </rect>
@@ -645,55 +645,29 @@
         <property name="maximum">
          <number>1000</number>
         </property>
+        <property name="value">
+         <number>50</number>
+        </property>
        </widget>
        <widget class="QLabel" name="label_3">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>20</y>
-          <width>71</width>
+          <width>121</width>
           <height>21</height>
          </rect>
         </property>
         <property name="text">
-         <string>Number</string>
+         <string>Number of threads</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="estimationSigmaCheckBox">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>40</y>
-          <width>87</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Sigma</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QCheckBox" name="estimationGammaCheckBox">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>60</y>
-          <width>87</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Gamma</string>
-        </property>
-       </widget>
-       <widget class="QCheckBox" name="estimationCheckBox">
+       <widget class="QCheckBox" name="signalSigmaCheckBox_2">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>80</y>
-          <width>87</width>
+          <width>101</width>
           <height>20</height>
          </rect>
         </property>
@@ -716,6 +690,9 @@
        </property>
        <property name="text">
         <string>Filtered signal</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>
