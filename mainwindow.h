@@ -30,6 +30,8 @@ private slots:
 
     void on_filteredSignalCheckBox_clicked();
 
+    void on_simpleGeneratorButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

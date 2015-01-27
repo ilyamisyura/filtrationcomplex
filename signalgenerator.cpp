@@ -4,6 +4,56 @@ SignalGenerator::SignalGenerator()
 {
 }
 
+/**
+ * @brief SignalGenerator::generateSimpleSignal
+ * @param num - number of counts (points)
+ * @param numJumps - number of jumps
+ * @param alpha - jump generation parameter
+ * @param sigmaS - signal generator sigma
+ * @param sigmaN - noise generator sigma
+ * @return QVector <double>
+ */
+QVector <double> SignalGenerator::generateSimpleSignal(double num,double numJumps,
+                                    double alpha, double sigmaS, double sigmaN, FilterCore *core){
+    QVector <double> MyX;
+    QVector <double> MyY;
+    QVector <double> MyRN1;
+    QVector <double> MyRN2;
+
+    for (int i=0; i<=num-1; i++){
+        MyRN1.insert(i,core->myRand(sigmaS));
+    }
+
+    MyY.insert(0,0);
+    int jumpsCount;
+    jumpsCount=0;
+
+    for (int i=1; i<=num-1; i++)
+    {
+        int rn = core->intRand(ceil(num/10));
+        if ((rn==5) && (jumpsCount<numJumps))
+        {
+            jumpsCount++;
+            MyY.insert(i,MyY.value(i-1)+alpha*MyRN1.value(i-1));
+        }
+        else
+        {
+            MyY.insert(i,MyY[i-1]+MyRN1[i-1]);
+        }
+    }
+
+    for (int i=0; i<=num-1; i++){
+        MyRN2.insert(i,core->myRand(sigmaN));
+    }
+
+    for (int i=0; i<=num-1; i++)
+    {
+        MyX.insert(i,MyY.value(i)+MyRN2.value(i));
+    }
+
+    return MyX;
+}
+
 QVector <double> SignalGenerator::generateSwitchingRegimeNoise(
         double t1,
         double t2,
@@ -63,7 +113,7 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignalPart(QVector <dou
 //                *discretizationStep
                 + sqrt(discretizationStep)*distribution(generator);
         if (currentYValue == 0){
-            qDebug("ZERO MAZAFAKA!!! At %d: noise value %f", k, noise.value(k));
+            qDebug("ZERO!!! At %d: noise value %f", k, noise.value(k));
         }
         signal.insert(k,currentYValue);
     }

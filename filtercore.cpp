@@ -25,6 +25,22 @@ int FilterCore::intRand(int randMax)
     return ceil(randNumber);
 }
 
+double FilterCore::myRand(double sigma){
+    int j;
+    double Ri=0;
+
+    double randMin = 0;
+    double randMax = 1;
+
+    for (j=1; j<=12; j++)
+    {
+        double randNumber = randMin + (randMax - randMin)*(qrand() / static_cast<double>( RAND_MAX ));
+        //qDebug() << "rand: " << randNumber;
+        Ri+=randNumber;
+    }
+    return sigma*(Ri-6);
+}
+
 /**
  * @brief FilterCore::randomNumber returns random double value from randMin to randMax
  * @param randMin

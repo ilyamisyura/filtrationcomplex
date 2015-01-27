@@ -3,11 +3,20 @@
 #include <QVector>
 #include <QTime>
 #include <random>
+#include "filtercore.h"
 
 class SignalGenerator
 {
 public:
     SignalGenerator();
+
+    QVector <double> generateSimpleSignal(
+            double num,
+            double num_jumps,
+            double alpha,
+            double sigmaS,
+            double sigmaN,
+            FilterCore *core);
 
     QVector <double> generateSwitchingRegimeNoise(
             double t1,

@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -158,35 +158,6 @@
         <string>15</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>150</y>
-         <width>151</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Approximation error</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="approximationErrorLine">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>150</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="cursor">
-        <cursorShape>IBeamCursor</cursorShape>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
      </widget>
      <widget class="QPushButton" name="simpleGeneratorButton">
       <property name="geometry">
@@ -201,7 +172,7 @@
        <string>Generate</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="filterButton">
+     <widget class="QPushButton" name="simpleFilterButton">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -217,7 +188,7 @@
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>SwitchingRegime</string>
+      <string>Switching Regime</string>
      </attribute>
      <widget class="QGroupBox" name="switchingRegimeGroupbox">
       <property name="geometry">

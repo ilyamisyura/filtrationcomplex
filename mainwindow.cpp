@@ -71,6 +71,7 @@ void Graph::setYAxis(QVector <double> y){
 
 void Graph::clearData() {
     this->connectedPlot->graph(graphNum)->clearData();
+    this->connectedPlot->replot();
 }
 
 //class instances
@@ -93,6 +94,13 @@ namespace common {
     QVector <double> sigmaVector;
     QVector <double> filteredSignalVector;
     QVector <double> xAxis;
+}
+namespace simpleInputs {
+    double noiseSigma;
+    double signalSigma;
+    double proportionality;
+    int countings;
+    double jumpAlpha;
 }
 
 namespace switchingRegimeInputs {
@@ -272,6 +280,8 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     signalGraph::signal.setPen(*pen);
     delete pen;
     signalGraph::signal.sendDataToPlot();
+
+    filteredSignalGraph::signal.clearData();
 }
 
 void MainWindow::on_switchingRegimeFilterButton_clicked()
@@ -328,6 +338,7 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
 
 //    currentEstimation = processor.switchingRegimeFilter(common::signalVector, filtrationTauAndSigmas, discretizationStep, signalGeneratorParam, noiseGeneratorParam);
 
+    common::filteredSignalVector = currentEstimation;
     filteredSignalGraph::signal.setXAxis(common::xAxis);
     filteredSignalGraph::signal.setYAxis(currentEstimation);
     filteredSignalGraph::signal.sendDataToPlot();
@@ -358,4 +369,51 @@ void MainWindow::on_filteredSignalCheckBox_clicked()
     } else {
         filteredSignalGraph::signal.hide();
     }
+}
+
+/*
+ * SIMPLE MODEL
+ */
+
+void MainWindow::on_simpleGeneratorButton_clicked()
+{
+    using namespace simpleInputs;
+
+    bool ok;
+    int resErr;
+    resErr = 0;
+
+    noiseSigma = ui->noiseSigmaLineEdit->text().toDouble(&ok);
+    if (!ok)
+        resErr=1;
+
+    proportionality = ui->proportionalityLineEdit->text().toDouble(&ok);
+    if (!ok)
+        resErr=1;
+
+    jumpAlpha = ui->jumpAlphaLineEdit->text().toDouble(&ok);
+    if (!ok)
+        resErr=1;
+
+    countings = ui->countingsLineEdit->text().toInt(&ok);
+    if (!ok)
+        resErr=1;
+
+    signalSigma = noiseSigma/proportionality;
+
+    common::signalVector.clear();
+    common::signalVector = generator.generateSimpleSignal(countings,core.intRand(10),jumpAlpha,signalSigma,noiseSigma,&core);
+
+    common::xAxis.clear();
+    for (int i=0; i<countings; i++){
+        common::xAxis.insert(i,i);
+    }
+
+    ui->plot->xAxis->setRange(0,countings);
+    ui->plot->yAxis->setRange(core.getSignalMin(common::signalVector)-1,core.getSignalMax(common::signalVector)-core.getSignalMin(common::signalVector)+1);
+
+    signalGraph::signal.setXAxis(common::xAxis);
+    signalGraph::signal.setYAxis(common::signalVector);
+    signalGraph::signal.sendDataToPlot();
+
 }

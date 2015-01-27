@@ -28,6 +28,8 @@ public:
 
     double normalDistribution(double mu, double sigma);
 
+    double myRand(double sigma);
+
     QVector <QVector<double> > switchingRegimeSigmaGenerator(
             double lowerSigma,
             double sigmaStep,
