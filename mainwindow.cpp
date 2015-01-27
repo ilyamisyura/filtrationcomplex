@@ -160,26 +160,36 @@ void MainWindow::setupPlot()
     ui->plot->addGraph();
     signalGraph::sigma.connectWithPlot(ui->plot);
     signalGraph::sigma.setGraphNum(0);
+    signalGraph::sigma.hide();
+
 
     ui->plot->addGraph();// for noise, now unused
 
     ui->plot->addGraph();
     signalGraph::signal.connectWithPlot(ui->plot);
     signalGraph::signal.setGraphNum(2);
+    QPen *pen = new QPen;
+    pen->setWidth(2);
+    pen->setColor(QColor(255,0,0));
+    signalGraph::signal.setPen(*pen);
+    delete pen;
 
     ui->plot->addGraph();
     filteredSignalGraph::estimation.connectWithPlot(ui->plot);
     filteredSignalGraph::estimation.setGraphNum(3);
+    filteredSignalGraph::estimation.hide();
 
     ui->plot->addGraph();
     filteredSignalGraph::signal.connectWithPlot(ui->plot);
     filteredSignalGraph::signal.setGraphNum(4);
-    QPen *pen = new QPen;
-    pen->setWidth(3);
-    pen->setColor(QColor(0,0,0));
-    filteredSignalGraph::signal.setPen(*pen);
-    delete pen;
+    QPen *blackPen = new QPen;
+    blackPen->setWidth(3);
+    blackPen->setColor(QColor(0,0,0));
+    filteredSignalGraph::signal.setPen(*blackPen);
+    delete blackPen;
 //  ui->plot->graph()->setPen(QPen(Qt::black));
+
+    //setting visibility
 }
 
 void MainWindow::on_switchingRegimeGeneratorButton_clicked()
@@ -274,14 +284,10 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
 
     signalGraph::signal.setXAxis(common::xAxis);
     signalGraph::signal.setYAxis(common::signalVector);
-    QPen *pen = new QPen;
-    pen->setWidth(2);
-    pen->setColor(QColor(255,0,0));
-    signalGraph::signal.setPen(*pen);
-    delete pen;
     signalGraph::signal.sendDataToPlot();
 
     filteredSignalGraph::signal.clearData();
+    filteredSignalGraph::estimation.clearData();
 }
 
 void MainWindow::on_switchingRegimeFilterButton_clicked()
@@ -331,16 +337,22 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
         qDebug("Size = %d",resultSize);
     }
 
+    common::filteredSignalVector.clear();
+
     for (int i=0;i<currentEstimation.size();i++){
-        finalEstimationValue = currentEstimation.value(i);
-        currentEstimation.replace(i,common::signalVector.value(i) - finalEstimationValue/threadNum);
+        finalEstimationValue = currentEstimation.value(i)/threadNum;
+        currentEstimation.replace(i,finalEstimationValue);
+        common::filteredSignalVector.insert(i,common::signalVector.value(i) - finalEstimationValue);
     }
 
 //    currentEstimation = processor.switchingRegimeFilter(common::signalVector, filtrationTauAndSigmas, discretizationStep, signalGeneratorParam, noiseGeneratorParam);
 
-    common::filteredSignalVector = currentEstimation;
+    filteredSignalGraph::estimation.setXAxis(common::xAxis);
+    filteredSignalGraph::estimation.setYAxis(currentEstimation);
+    filteredSignalGraph::estimation.sendDataToPlot();
+
     filteredSignalGraph::signal.setXAxis(common::xAxis);
-    filteredSignalGraph::signal.setYAxis(currentEstimation);
+    filteredSignalGraph::signal.setYAxis(common::filteredSignalVector);
     filteredSignalGraph::signal.sendDataToPlot();
 }
 
@@ -359,6 +371,15 @@ void MainWindow::on_signalCheckBox_clicked()
         signalGraph::signal.show();
     } else {
         signalGraph::signal.hide();
+    }
+}
+
+void MainWindow::on_estimationCheckBox_clicked()
+{
+    if (ui->estimationCheckBox->isChecked()) {
+        filteredSignalGraph::estimation.show();
+    } else {
+        filteredSignalGraph::estimation.hide();
     }
 }
 

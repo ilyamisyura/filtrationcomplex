@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -556,7 +556,7 @@
          <string>Sigma</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QCheckBox" name="signalNoiseCheckBox">
@@ -633,7 +633,7 @@
          <string>Number of threads</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="signalSigmaCheckBox_2">
+       <widget class="QCheckBox" name="estimationCheckBox">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -646,7 +646,7 @@
          <string>Estimation</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </widget>

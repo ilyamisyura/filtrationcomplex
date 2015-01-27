@@ -32,6 +32,8 @@ private slots:
 
     void on_simpleGeneratorButton_clicked();
 
+    void on_estimationCheckBox_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
