@@ -277,10 +277,17 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     signalGraph::sigma.sendDataToPlot();
 
     common::signalVector.clear();
-    common::signalVector = generator.generateSwitchingRegimeSignal(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep);
+    common::signalVector = generator.generateSwitchingRegimeSignal(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep,startingValueMu,startingValueSigma);
 
-    ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-1,
-                               core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+1);
+//    ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-1,
+//                               core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+1);
+
+
+    double margin;
+    margin = (core.getSignalMax(common::signalVector) - core.getSignalMin(common::signalVector))/20;
+
+    ui->plot->yAxis->setRange(core.getSignalMin(common::signalVector)-margin,
+                               core.getSignalMax(common::signalVector)+margin);
 
     signalGraph::signal.setXAxis(common::xAxis);
     signalGraph::signal.setYAxis(common::signalVector);
@@ -299,7 +306,6 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
 
     int threadNum;
 
-//    threadNum = 100;
     threadNum = ui->threadsSpinBox->value();
 
     QVector <QFuture <QVector <double> > > futureEstimationsVector;
@@ -334,15 +340,17 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
                 currentEstimation.replace(i,finalEstimationValue);
             }
         }
-        qDebug("Size = %d",resultSize);
     }
 
     common::filteredSignalVector.clear();
 
+    double plusValue;
+    plusValue = common::signalVector.value(0);
+
     for (int i=0;i<currentEstimation.size();i++){
         finalEstimationValue = currentEstimation.value(i)/threadNum;
         currentEstimation.replace(i,finalEstimationValue);
-        common::filteredSignalVector.insert(i,common::signalVector.value(i) - finalEstimationValue);
+        common::filteredSignalVector.insert(i,common::signalVector.value(i) - finalEstimationValue + plusValue);
     }
 
 //    currentEstimation = processor.switchingRegimeFilter(common::signalVector, filtrationTauAndSigmas, discretizationStep, signalGeneratorParam, noiseGeneratorParam);
@@ -358,9 +366,16 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
 
 void MainWindow::on_signalSigmaCheckBox_clicked()
 {
+    double margin;
+    margin = (core.getSignalMax(common::signalVector) - core.getSignalMin(common::signalVector))/20;
+
     if (ui->signalSigmaCheckBox->isChecked()) {
+        ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-margin,
+                                   core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+margin);
         signalGraph::sigma.show();
     } else {
+        ui->plot->yAxis->setRange(core.getSignalMin(common::signalVector)-margin,
+                                   core.getSignalMax(common::signalVector)+margin);
         signalGraph::sigma.hide();
     }
 }
@@ -437,4 +452,15 @@ void MainWindow::on_simpleGeneratorButton_clicked()
     signalGraph::signal.setYAxis(common::signalVector);
     signalGraph::signal.sendDataToPlot();
 
+    filteredSignalGraph::signal.clearData();
+
+}
+
+void MainWindow::on_simpleFilterButton_clicked()
+{
+    using namespace simpleInputs;
+    common::filteredSignalVector = processor.simpleFilter(common::signalVector,signalSigma,noiseSigma);
+    filteredSignalGraph::signal.setXAxis(common::xAxis);
+    filteredSignalGraph::signal.setYAxis(common::filteredSignalVector);
+    filteredSignalGraph::signal.sendDataToPlot();
 }

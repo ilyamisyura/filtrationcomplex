@@ -17,25 +17,25 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>0</y>
       <width>921</width>
       <height>251</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Simple Filter</string>
+      <string>Discrete Filter</string>
      </attribute>
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>0</y>
-        <width>301</width>
+        <width>331</width>
         <height>191</height>
        </rect>
       </property>
@@ -45,7 +45,7 @@
       <widget class="QLineEdit" name="noiseSigmaLineEdit">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>210</x>
          <y>30</y>
          <width>113</width>
          <height>21</height>
@@ -87,7 +87,7 @@
       <widget class="QLineEdit" name="proportionalityLineEdit">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>210</x>
          <y>60</y>
          <width>113</width>
          <height>21</height>
@@ -116,7 +116,7 @@
       <widget class="QLineEdit" name="countingsLineEdit">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>210</x>
          <y>90</y>
          <width>113</width>
          <height>21</height>
@@ -145,7 +145,7 @@
       <widget class="QLineEdit" name="jumpAlphaLineEdit">
        <property name="geometry">
         <rect>
-         <x>170</x>
+         <x>210</x>
          <y>120</y>
          <width>113</width>
          <height>21</height>
@@ -164,7 +164,7 @@
        <rect>
         <x>10</x>
         <y>190</y>
-        <width>151</width>
+        <width>171</width>
         <height>32</height>
        </rect>
       </property>
@@ -175,9 +175,9 @@
      <widget class="QPushButton" name="simpleFilterButton">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>170</x>
         <y>190</y>
-        <width>151</width>
+        <width>171</width>
         <height>32</height>
        </rect>
       </property>
@@ -188,14 +188,14 @@
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Switching Regime</string>
+      <string>Infinite Filter</string>
      </attribute>
      <widget class="QGroupBox" name="switchingRegimeGroupbox">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>0</y>
-        <width>651</width>
+        <width>631</width>
         <height>191</height>
        </rect>
       </property>
@@ -344,13 +344,13 @@
         </rect>
        </property>
        <property name="text">
-        <string>T</string>
+        <string>T (exit condition)</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="discretizationStepLineEdit">
        <property name="geometry">
         <rect>
-         <x>530</x>
+         <x>510</x>
          <y>30</y>
          <width>113</width>
          <height>21</height>
@@ -373,13 +373,13 @@
         </rect>
        </property>
        <property name="text">
-        <string>discretization step</string>
+        <string>Discretization step</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="startingValueMuLineEdit">
        <property name="geometry">
         <rect>
-         <x>530</x>
+         <x>510</x>
          <y>60</y>
          <width>113</width>
          <height>21</height>
@@ -395,7 +395,7 @@
       <widget class="QLineEdit" name="startingValueSigmaLineEdit">
        <property name="geometry">
         <rect>
-         <x>530</x>
+         <x>510</x>
          <y>90</y>
          <width>113</width>
          <height>21</height>
@@ -418,7 +418,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>starting value mu</string>
+        <string>Starting value mu</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_20">
@@ -431,13 +431,13 @@
         </rect>
        </property>
        <property name="text">
-        <string>starting value sigma</string>
+        <string>Starting value sigma</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="noiseParamLineEdit">
        <property name="geometry">
         <rect>
-         <x>530</x>
+         <x>510</x>
          <y>120</y>
          <width>113</width>
          <height>21</height>
@@ -453,7 +453,7 @@
       <widget class="QLineEdit" name="signalParamLineEdit">
        <property name="geometry">
         <rect>
-         <x>530</x>
+         <x>510</x>
          <y>150</y>
          <width>113</width>
          <height>21</height>
@@ -476,7 +476,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>noise generator param</string>
+        <string>Noise generator param</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_22">
@@ -489,7 +489,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>signal generator param</string>
+        <string>Signal generator param</string>
        </property>
       </widget>
      </widget>
@@ -498,7 +498,7 @@
        <rect>
         <x>10</x>
         <y>190</y>
-        <width>151</width>
+        <width>171</width>
         <height>32</height>
        </rect>
       </property>
@@ -511,7 +511,7 @@
        <rect>
         <x>170</x>
         <y>190</y>
-        <width>151</width>
+        <width>171</width>
         <height>32</height>
        </rect>
       </property>
@@ -522,21 +522,21 @@
      <widget class="QGroupBox" name="graphicsGroupBox">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>790</x>
         <y>0</y>
-        <width>241</width>
+        <width>121</width>
         <height>191</height>
        </rect>
       </property>
       <property name="title">
-       <string>Graphics</string>
+       <string>Graphs</string>
       </property>
       <widget class="QGroupBox" name="groupBox_2">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>20</y>
-         <width>91</width>
+         <width>101</width>
          <height>101</height>
         </rect>
        </property>
@@ -547,7 +547,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>40</y>
+          <y>20</y>
           <width>87</width>
           <height>20</height>
          </rect>
@@ -563,8 +563,8 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>60</y>
-          <width>87</width>
+          <y>50</y>
+          <width>81</width>
           <height>20</height>
          </rect>
         </property>
@@ -588,73 +588,16 @@
          <bool>true</bool>
         </property>
        </widget>
-      </widget>
-      <widget class="QGroupBox" name="groupBox_3">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>20</y>
-         <width>120</width>
-         <height>101</height>
-        </rect>
-       </property>
-       <property name="title">
-        <string>Estimations</string>
-       </property>
-       <widget class="QSpinBox" name="threadsSpinBox">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>40</y>
-          <width>49</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>50</number>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_3">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>20</y>
-          <width>121</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Number of threads</string>
-        </property>
-       </widget>
-       <widget class="QCheckBox" name="estimationCheckBox">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>80</y>
-          <width>101</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Estimation</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
+       <zorder>signalSigmaCheckBox</zorder>
+       <zorder>signalNoiseCheckBox</zorder>
+       <zorder>signalCheckBox</zorder>
+       <zorder>groupBox_3</zorder>
       </widget>
       <widget class="QCheckBox" name="filteredSignalCheckBox">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>150</y>
+         <y>160</y>
          <width>121</width>
          <height>20</height>
         </rect>
@@ -664,6 +607,67 @@
        </property>
        <property name="checked">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="estimationCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>130</y>
+         <width>101</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Estimation</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>0</y>
+        <width>131</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Filtration</string>
+      </property>
+      <widget class="QSpinBox" name="threadsSpinBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>120</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="value">
+        <number>50</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Number of threads</string>
        </property>
       </widget>
      </widget>

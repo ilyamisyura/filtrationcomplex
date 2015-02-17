@@ -56,6 +56,10 @@ public:
                 double higher,
                 double integrationStep
             );
+
+    //simple model
+
+    QVector <double> simpleFilter(QVector <double> signal, double signalSigma, double noiseSigma);
 };
 
 //============================================================================

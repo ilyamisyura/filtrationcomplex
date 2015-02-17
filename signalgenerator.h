@@ -29,7 +29,8 @@ public:
     QVector <double> generateSwitchingRegimeSignalPart(
            QVector <double> noise,
            double signalA,
-           double discretizationStep
+           double discretizationStep,
+           double startValue
            );
 
     QVector <double> generateSwitchingRegimeSignal(
@@ -37,7 +38,9 @@ public:
             double noiseGeneratorParam,
             double signalGeneratorParam,
             double exitCondition,
-            double discretizationStep
+            double discretizationStep,
+            double startValueMu,
+            double startValueSigma
             );
 };
 

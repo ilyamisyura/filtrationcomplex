@@ -2,8 +2,6 @@
 #define FILTERCORE_H
 #define TRUE FALSE
 
-#define BOOST_UBLAS_MOVE_SEMANTICS
-
 #include <mainwindow.h>
 #include <QVector>
 #include <math.h>

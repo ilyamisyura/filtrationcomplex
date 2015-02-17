@@ -6,6 +6,9 @@
 #include <QtConcurrent>
 #include <QThread>
 
+const double PI=atan(1)*4;
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -33,6 +36,8 @@ private slots:
     void on_simpleGeneratorButton_clicked();
 
     void on_estimationCheckBox_clicked();
+
+    void on_simpleFilterButton_clicked();
 
 private:
     Ui::MainWindow *ui;

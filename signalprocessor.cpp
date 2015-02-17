@@ -1,4 +1,9 @@
 #include "signalprocessor.h"
+#include <QTextStream>
+QTextStream cin(stdin);
+QTextStream cout(stdout);
+
+const double PI=atan(1)*4;
 
 SignalProcessor::SignalProcessor()
 {
@@ -15,6 +20,10 @@ SignalProcessor::SignalProcessor()
     fSignalParam = 0; //A
 }
 
+
+//===========================================
+//SWITCHING REGIME MODEL
+//===========================================
 void SignalProcessor::setFunctionHParameters(
     double start,
     double sigma,
@@ -140,7 +149,7 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
     double s; //time between current time and previous time
     double t; //current time
-    double integrationStep = discretizationStep/100; //for integral counting
+    double integrationStep = discretizationStep/50; //for integral counting
 
     double prevSignalValue;
     double currSignalValue;
@@ -154,29 +163,18 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
 
     resI = 0;
 
-
-//    qDebug("=========================================================");
-//    qDebug("NEW FILTRATION");
-//    qDebug("=========================================================");
-//    qDebug("Here we have dem tau with %d parts", ns);
     for (int k=0; k<ns; k++){
         currentSigmaPart = tauAndSigmas.value(k);
         currentSigma = currentSigmaPart.value(1);
         tauStart = currentSigmaPart.value(0);
-//        qDebug("%d: %f",k,tauStart);
         tauEnd = tauAndSigmas.value(k+1).value(0);
     }
-//    qDebug("===========================");
-//    qDebug("starting to parse Tau and Sigmas vector");
     for (int k=0; k<ns; k++){
         currentSigmaPart = tauAndSigmas.value(k);
         currentSigma = currentSigmaPart.value(1);
         tauStart = currentSigmaPart.value(0);
         tauEnd = tauAndSigmas.value(k+1).value(0);
-//        qDebug("%f: %f",tauStart,tauEnd);
         t = tauStart;
-
-        int np = currentSigmaPart.size();
 
         result.insert(resI,signal.value(resI));
         member1 = result.value(resI);
@@ -213,4 +211,75 @@ QVector <double> SignalProcessor::switchingRegimeFilter(
     return result;
 }
 
+//===========================================
+//SIMPLE MODEL
+//===========================================
 
+QVector <double> SignalProcessor::simpleFilter(QVector <double> signal, double signalSigma, double noiseSigma){
+
+    QVector <double> filteredSignal;
+    QVector <double> result;
+    QVector <double> lambdaVector;
+    QVector <double> uu;
+
+    double SVlength;
+
+    int num;
+    num = signal.size();
+    filteredSignal.fill(0,num);
+
+    for (int i=0; i<num; i++)
+    {
+        lambdaVector.insert(i,1+2 * pow(noiseSigma/signalSigma,2) * (1-cos((i+1)*PI/(num+1))));
+    }
+
+    double ** F;
+    F=(double **) malloc(num*(sizeof (double*)));
+    for (int i=0;i<num;i++)
+       F[i]=(double*) malloc(num*(sizeof (double)));
+
+    double sum;
+    double mm;
+
+    for (int i=0; i<num; i++)
+    {
+        for (int j=0; j<num; j++){
+            F[i][j]=sin((i+1)*(j+1)*PI/(num+1));
+        }
+    }
+
+    SVlength = 0;
+    for (int i=0; i<num; i++){
+        SVlength+=F[i][0]*F[i][0];
+    }
+
+    SVlength=sqrt(SVlength);
+
+    for (int i=0; i<num; i++)
+    {
+        for (int j=0; j<num; j++){
+            F[i][j]=F[i][j]/SVlength;
+        }
+    }
+
+    for (int kk=0; kk<num; kk++)
+    {
+        sum=0;
+        uu.clear();
+        for (int i=0; i<num; i++){
+            sum+= F[i][kk]*signal.value(i);
+        }
+
+        for (int i=0; i<num; i++){
+            uu.insert(i,F[i][kk]*sum/lambdaVector.value(kk));
+        }
+
+        mm=0;
+        for (int i=0; i<num; i++)
+        {
+            mm = filteredSignal.value(i);
+            filteredSignal.replace(i,mm+uu.value(i));
+        }
+    }
+    return filteredSignal;
+}

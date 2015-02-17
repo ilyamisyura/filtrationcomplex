@@ -91,7 +91,8 @@ QVector <double> SignalGenerator::generateSwitchingRegimeNoise(
 
 QVector <double> SignalGenerator::generateSwitchingRegimeSignalPart(QVector <double> noise,
                                                double signalA,
-                                               double discretizationStep
+                                               double discretizationStep,
+                                               double startValue
                                                ) {
 
     QVector <double> signal;
@@ -100,9 +101,10 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignalPart(QVector <dou
     QTime t = QTime::currentTime();
     generator.seed(t.msec());
 
+    //change to input
     std::normal_distribution<double> distribution(0,1);
 
-    signal.insert(0,signal.value(0));
+    signal.insert(0,startValue);
 
     double prevYValue, currentYValue;
 
@@ -113,7 +115,6 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignalPart(QVector <dou
                 *discretizationStep
                 + sqrt(discretizationStep)*distribution(generator);
         if (currentYValue == 0){
-            qDebug("ZERO!!! At %d: noise value %f", k, noise.value(k));
         }
         signal.insert(k,currentYValue);
     }
@@ -126,7 +127,9 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
         double noiseGeneratorParam,
         double signalGeneratorParam,
         double exitCondition,
-        double discretizationStep
+        double discretizationStep,
+        double startValueMu,
+        double startValueSigma
         )
 {
 
@@ -142,6 +145,7 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
     double sigmaStart;
     double tauEnd;
     double sigmaEnd;
+    double partStartValue;
 
     double lastSignalPartValue;
 
@@ -157,6 +161,15 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
 
     for (int i=0; i<=size-1; i++){
 
+        if (i==0){
+            std::default_random_engine generator;
+            QTime t = QTime::currentTime();
+            generator.seed(t.msec());
+            std::normal_distribution<double> distribution(startValueMu,startValueSigma);
+            partStartValue = distribution(generator);
+        }
+        else partStartValue = lastSignalPartValue;
+
         startVec = tauAndSigmas.value(i);
         tauStart = startVec.value(0);
         sigmaStart = startVec.value(1);
@@ -170,7 +183,7 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
         }
 
         noiseSignal = this->generateSwitchingRegimeNoise(tauStart,tauEnd,discretizationStep,sigmaStart,lastSignalPartValue,noiseGeneratorParam);
-        signalPart = this->generateSwitchingRegimeSignalPart(noiseSignal, signalGeneratorParam, discretizationStep);
+        signalPart = this->generateSwitchingRegimeSignalPart(noiseSignal, signalGeneratorParam, discretizationStep,partStartValue);
 
         lastSignalPartValue = signalPart.last();
 
