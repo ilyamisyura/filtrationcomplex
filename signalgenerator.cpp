@@ -78,7 +78,7 @@ QVector <double> SignalGenerator::generateSwitchingRegimeNoise(
 
     noise.insert(0,startingValue);
 
-    while (j < t2) {
+    while (j <= t2) {
         prevXValue = noise.value(i-1);
         currentXValue = (1+noiseA)*prevXValue*discretizationStep + sigma*sqrt(discretizationStep)*distribution(generator);
         noise.insert(i,currentXValue);

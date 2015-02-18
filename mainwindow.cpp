@@ -74,6 +74,11 @@ void Graph::clearData() {
     this->connectedPlot->replot();
 }
 
+void Graph::setSignal(DataSignal *inputSignal){
+    this->setXAxis(inputSignal->getTimeScale());
+    this->setYAxis(inputSignal->getData());
+}
+
 //class instances
 FilterCore core;
 SignalGenerator generator;
@@ -94,6 +99,9 @@ namespace common {
     QVector <double> sigmaVector;
     QVector <double> filteredSignalVector;
     QVector <double> xAxis;
+
+    //new
+    DataSignal unfilteredSignal;
 }
 namespace simpleInputs {
     double noiseSigma;
@@ -144,6 +152,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    pDetailsForm = new DetailsForm;
+    pDetailsForm->prepareInfiniteFiltrationDetails();
+    QObject::connect(&common::unfilteredSignal,&DataSignal::dataChanged,pDetailsForm,&DetailsForm::setSignalData);
     //plot pre-setup
     setupPlot();
 }
@@ -151,6 +162,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete pDetailsForm;
 }
 
 void MainWindow::setupPlot()
@@ -278,8 +290,9 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     common::signalVector.clear();
     common::signalVector = generator.generateSwitchingRegimeSignal(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep,startingValueMu,startingValueSigma);
 
-//    ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-1,
-//                               core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+1);
+    //new
+    common::unfilteredSignal.setData(common::signalVector);
+    common::unfilteredSignal.setTimeScale(common::xAxis);
 
 
     double margin;
@@ -288,8 +301,9 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     ui->plot->yAxis->setRange(core.getSignalMin(common::signalVector)-margin,
                                core.getSignalMax(common::signalVector)+margin);
 
-    signalGraph::signal.setXAxis(common::xAxis);
-    signalGraph::signal.setYAxis(common::signalVector);
+//    signalGraph::signal.setXAxis(common::xAxis);
+//    signalGraph::signal.setYAxis(common::signalVector);
+    signalGraph::signal.setSignal(&common::unfilteredSignal);
     signalGraph::signal.sendDataToPlot();
 
     filteredSignalGraph::signal.clearData();
@@ -466,7 +480,5 @@ void MainWindow::on_simpleFilterButton_clicked()
 
 void MainWindow::on_DetailsButton_clicked()
 {
-    pDetailsForm = new DetailsForm;
     pDetailsForm->show();
-//    pDetailsForm->details
 }

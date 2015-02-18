@@ -7,6 +7,7 @@
 
 #include "qcustomplot.h"
 #include "detailsform.h"
+#include "datasignal.h"
 
 const double PI=atan(1)*4;
 
@@ -51,7 +52,8 @@ protected:
     DetailsForm *pDetailsForm;
 };
 
-class Graph {
+class Graph : public QObject {
+    Q_OBJECT
 private:
     bool visible;
     bool plotIsConnected;
@@ -82,12 +84,18 @@ public:
     void setXAxis(QVector <double> x);
     void setYAxis(QVector <double> y);
 
+
+
     bool readyForPlot();
 
     void clearData();
 
     void sendDataToPlot();
 
+signals:
+
+public slots:
+    void setSignal(DataSignal *signal);
 };
 
 #endif // MAINWINDOW_H

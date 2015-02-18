@@ -2,6 +2,8 @@
 #define DETAILSFORM_H
 
 #include <QMainWindow>
+#include <datasignal.h>
+#include "math.h"
 
 namespace Ui {
 class DetailsForm;
@@ -17,6 +19,18 @@ public:
 
 private:
     Ui::DetailsForm *ui;
+    bool isInfiniteReady;
+    bool isDiscreteReady;
+    bool signalDataIsSet;
+    bool filteredSignalDataIsSet;
+
+signals:
+
+public slots:
+    void setSignalData(QVector <double> data);
+    void setFilteredSignalData(QVector <double> data);
+    void prepareInfiniteFiltrationDetails();
+    void prepareDiscreteFiltrationDetails();
 };
 
 #endif // DETAILSFORM_H
