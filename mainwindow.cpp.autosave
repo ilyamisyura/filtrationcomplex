@@ -468,5 +468,4 @@ void MainWindow::on_DetailsButton_clicked()
 {
     pDetailsForm = new DetailsForm;
     pDetailsForm->show();
-//    pDetailsForm->details
 }

@@ -18,16 +18,16 @@ SOURCES += main.cpp\
     signalgenerator.cpp \
     qcustomplot.cpp \
     signalprocessor.cpp \
-    detailswindow.cpp
+    detailsform.cpp
 
 HEADERS  += mainwindow.h \
     filtercore.h \
     signalgenerator.h \
     qcustomplot.h \
     signalprocessor.h \
-    detailswindow.h
+    detailsform.h
 
 FORMS    += mainwindow.ui \
-    detailswindow.ui
+    detailsform.ui
 
 CONFIG+=c++11

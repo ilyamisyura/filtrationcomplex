@@ -1,14 +1,14 @@
 #include "detailswindow.h"
 #include "ui_detailswindow.h"
 
-detailswindow::detailswindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::detailswindow)
+DetailsWindow::DetailsWindow(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::DetailsWindow)
 {
     ui->setupUi(this);
 }
 
-detailswindow::~detailswindow()
+DetailsWindow::~DetailsWindow()
 {
     delete ui;
 }

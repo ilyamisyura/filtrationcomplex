@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -588,10 +588,6 @@
          <bool>true</bool>
         </property>
        </widget>
-       <zorder>signalSigmaCheckBox</zorder>
-       <zorder>signalNoiseCheckBox</zorder>
-       <zorder>signalCheckBox</zorder>
-       <zorder>groupBox_3</zorder>
       </widget>
       <widget class="QCheckBox" name="filteredSignalCheckBox">
        <property name="geometry">
@@ -671,6 +667,19 @@
        </property>
       </widget>
      </widget>
+     <widget class="QPushButton" name="DetailsButton">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>190</y>
+        <width>171</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Details</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QCustomPlot" name="plot" native="true">
@@ -693,6 +702,19 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFiltraton_Complex">
+    <property name="title">
+     <string>Filtraton Complex</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionDetails"/>
+   </widget>
+   <addaction name="menuFiltraton_Complex"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -703,6 +725,14 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionDetails">
+   <property name="text">
+    <string>Filtration Details</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

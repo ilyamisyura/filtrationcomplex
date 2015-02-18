@@ -2,9 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "qcustomplot.h"
 #include <QtConcurrent>
 #include <QThread>
+
+#include "qcustomplot.h"
+#include "detailsform.h"
 
 const double PI=atan(1)*4;
 
@@ -39,8 +41,14 @@ private slots:
 
     void on_simpleFilterButton_clicked();
 
+    void on_DetailsButton_clicked();
+
+
 private:
     Ui::MainWindow *ui;
+
+protected:
+    DetailsForm *pDetailsForm;
 };
 
 class Graph {
