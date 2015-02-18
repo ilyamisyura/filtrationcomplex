@@ -17,14 +17,17 @@ SOURCES += main.cpp\
     filtercore.cpp \
     signalgenerator.cpp \
     qcustomplot.cpp \
-    signalprocessor.cpp
+    signalprocessor.cpp \
+    detailswindow.cpp
 
 HEADERS  += mainwindow.h \
     filtercore.h \
     signalgenerator.h \
     qcustomplot.h \
-    signalprocessor.h
+    signalprocessor.h \
+    detailswindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    detailswindow.ui
 
 CONFIG+=c++11
