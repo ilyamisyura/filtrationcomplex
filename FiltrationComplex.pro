@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     signalprocessor.cpp \
     detailsform.cpp \
-    datasignal.cpp
+    datasignal.cpp \
+    qcustomplotgraph.cpp
 
 HEADERS  += mainwindow.h \
     filtercore.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     qcustomplot.h \
     signalprocessor.h \
     detailsform.h \
-    datasignal.h
+    datasignal.h \
+    qcustomplotgraph.h
 
 FORMS    += mainwindow.ui \
     detailsform.ui

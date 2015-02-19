@@ -6,6 +6,7 @@
 #include <QThread>
 
 #include "qcustomplot.h"
+#include "qcustomplotgraph.h"
 #include "detailsform.h"
 #include "datasignal.h"
 
@@ -50,52 +51,6 @@ private:
 
 protected:
     DetailsForm *pDetailsForm;
-};
-
-class Graph : public QObject {
-    Q_OBJECT
-private:
-    bool visible;
-    bool plotIsConnected;
-
-    QCustomPlot *connectedPlot;
-
-    bool graphNumIsSet;
-    int graphNum;
-
-    QVector <double> xAxis;
-    QVector <double> yAxis;
-    QPen pen;
-
-public:
-    Graph();
-
-    void connectWithPlot();
-
-    void show();
-    void hide();
-
-    void setPen(QPen pen);
-
-    void setGraphNum(int num);
-
-    void connectWithPlot(QCustomPlot *plot);
-
-    void setXAxis(QVector <double> x);
-    void setYAxis(QVector <double> y);
-
-
-
-    bool readyForPlot();
-
-    void clearData();
-
-    void sendDataToPlot();
-
-signals:
-
-public slots:
-    void setSignal(DataSignal *signal);
 };
 
 #endif // MAINWINDOW_H

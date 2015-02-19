@@ -4,81 +4,6 @@
 #include "signalgenerator.h"
 #include "signalprocessor.h"
 
-Graph::Graph(){
-
-    this->visible = true;
-    this->plotIsConnected = false;
-    this->graphNumIsSet = false;
-
-    QPen *pen = new QPen;
-    pen->setWidth(1);
-    pen->setColor(QColor(0,0,0));
-    setPen(*pen);
-    delete pen;
-}
-
-void Graph::setPen(QPen pen) {
-    Graph::pen = pen;
-    if (plotIsConnected && graphNumIsSet){
-        this->connectedPlot->graph(this->graphNum)->setPen(this->pen);
-        this->connectedPlot->replot();
-    }
-}
-
-void Graph::show(){
-    this->visible = true;
-    if (plotIsConnected){
-        this->sendDataToPlot();
-    }
-}
-
-void Graph::hide(){
-    this->visible = false;
-    if (plotIsConnected){
-        this->sendDataToPlot();
-    }
-}
-
-void Graph::connectWithPlot(QCustomPlot *pPlot){
-    this->connectedPlot = pPlot;
-    this->plotIsConnected = true;
-}
-
-void Graph::setGraphNum(int num){
-    this->graphNum = num;
-    this->graphNumIsSet = true;
-}
-
-bool Graph::readyForPlot(){
-    return (this->plotIsConnected && this->graphNumIsSet && !this->xAxis.empty() && !this->yAxis.empty());
-}
-
-void Graph::sendDataToPlot(){
-    if (this->readyForPlot()){
-        this->connectedPlot->graph(this->graphNum)->setData(this->xAxis,this->yAxis);
-        this->connectedPlot->graph(this->graphNum)->setVisible(this->visible);
-        this->connectedPlot->replot();
-    }
-}
-
-void Graph::setXAxis(QVector <double> x){
-    this->xAxis = x;
-}
-
-void Graph::setYAxis(QVector <double> y){
-    this->yAxis = y;
-}
-
-void Graph::clearData() {
-    this->connectedPlot->graph(graphNum)->clearData();
-    this->connectedPlot->replot();
-}
-
-void Graph::setSignal(DataSignal *inputSignal){
-    this->setXAxis(inputSignal->getTimeScale());
-    this->setYAxis(inputSignal->getData());
-}
-
 //class instances
 FilterCore core;
 SignalGenerator generator;
@@ -136,15 +61,15 @@ namespace switchingRegimeInputs {
 }
 
 namespace signalGraph {
-    Graph sigma;
-    Graph noise;
-    Graph signal;
+    QCustomPlotGraph sigma;
+    QCustomPlotGraph noise;
+    QCustomPlotGraph signal;
 }
 
 namespace filteredSignalGraph {
-    Graph estimation;
-    Graph sigma;
-    Graph signal;
+    QCustomPlotGraph estimation;
+    QCustomPlotGraph sigma;
+    QCustomPlotGraph signal;
 }
 
 MainWindow::MainWindow(QWidget *parent) :
