@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     signalprocessor.cpp \
     detailsform.cpp \
     datasignal.cpp \
-    qcustomplotgraph.cpp
+    qcustomplotgraph.cpp \
+    abstractgenerator.cpp
 
 HEADERS  += mainwindow.h \
     filtercore.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     signalprocessor.h \
     detailsform.h \
     datasignal.h \
-    qcustomplotgraph.h
+    qcustomplotgraph.h \
+    abstractgenerator.h
 
 FORMS    += mainwindow.ui \
     detailsform.ui

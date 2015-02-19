@@ -27,6 +27,7 @@ namespace common {
 
     //new
     DataSignal unfilteredSignal;
+    DataSignal filteredSignal;
 }
 namespace simpleInputs {
     double noiseSigma;
@@ -80,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pDetailsForm = new DetailsForm;
     pDetailsForm->prepareInfiniteFiltrationDetails();
     QObject::connect(&common::unfilteredSignal,&DataSignal::dataChanged,pDetailsForm,&DetailsForm::setSignalData);
+    QObject::connect(&common::filteredSignal,&DataSignal::dataChanged,pDetailsForm,&DetailsForm::setFilteredSignalData);
     //plot pre-setup
     setupPlot();
 }
@@ -239,6 +241,8 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
 {
     using namespace switchingRegimeInputs;
 
+    QVector <double> *tmpFilteredVector = new QVector <double>;
+
     QVector <QVector <double>> filtrationTauAndSigmas;
     QVector <double> currentEstimation;
 
@@ -300,6 +304,10 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
     filteredSignalGraph::signal.setXAxis(common::xAxis);
     filteredSignalGraph::signal.setYAxis(common::filteredSignalVector);
     filteredSignalGraph::signal.sendDataToPlot();
+
+    tmpFilteredVector = &common::filteredSignalVector;
+
+    common::filteredSignal.setData(*tmpFilteredVector);
 }
 
 void MainWindow::on_signalSigmaCheckBox_clicked()
