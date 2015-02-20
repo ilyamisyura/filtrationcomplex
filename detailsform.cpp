@@ -67,3 +67,8 @@ void DetailsForm::setFilteredSignalData(QVector <double> data){
     }
     this->filteredSignalDataIsSet = true;
 }
+
+void DetailsForm::resetTable() {
+    ui->tableWidget->reset();
+    emit tableResetted();
+}

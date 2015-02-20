@@ -5,6 +5,11 @@ DataSignal::DataSignal(QObject *parent) :
 {
 }
 
+/**
+ * sets main data
+ * @brief DataSignal::setData
+ * @param data
+ */
 void DataSignal::setData(QVector <double> data){
     this->data = data;
     emit dataChanged(data);
@@ -21,4 +26,10 @@ QVector <double> DataSignal::getData(){
 
 QVector <double> DataSignal::getTimeScale(){
     return this->timeScale;
+}
+
+void DataSignal::clear(){
+    this->data.clear();
+    this->timeScale.clear();
+    emit cleared();
 }

@@ -25,12 +25,14 @@ private:
     bool filteredSignalDataIsSet;
 
 signals:
+    void tableResetted();
 
 public slots:
     void setSignalData(QVector <double> data);
     void setFilteredSignalData(QVector <double> data);
     void prepareInfiniteFiltrationDetails();
     void prepareDiscreteFiltrationDetails();
+    void resetTable();
 };
 
 #endif // DETAILSFORM_H

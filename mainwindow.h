@@ -10,6 +10,8 @@
 #include "detailsform.h"
 #include "datasignal.h"
 
+#include "discretegenerator.h"
+
 const double PI=atan(1)*4;
 
 

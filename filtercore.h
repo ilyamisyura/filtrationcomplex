@@ -2,7 +2,6 @@
 #define FILTERCORE_H
 #define TRUE FALSE
 
-#include <mainwindow.h>
 #include <QVector>
 #include <math.h>
 #include <qmath.h>

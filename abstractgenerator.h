@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "datasignal.h"
+#include "filtercore.h"
 
 class AbstractGenerator : public QObject
 {
@@ -11,7 +12,7 @@ public:
     explicit AbstractGenerator(QObject *parent = 0);
 
 signals:
-    void signalIsGenerated(DataSignal *signal);
+    void signalIsGenerated(DataSignal  *signal);
 
 public slots:
 

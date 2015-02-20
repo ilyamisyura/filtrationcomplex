@@ -360,6 +360,7 @@ void MainWindow::on_filteredSignalCheckBox_clicked()
 void MainWindow::on_simpleGeneratorButton_clicked()
 {
     using namespace simpleInputs;
+//    DiscreteGenerator discGen;
 
     bool ok;
     int resErr;
@@ -405,6 +406,11 @@ void MainWindow::on_simpleGeneratorButton_clicked()
 void MainWindow::on_simpleFilterButton_clicked()
 {
     using namespace simpleInputs;
+
+//    DiscreteGenerator discGen;
+
+//    discGen.simpleFilter(common::signalVector,signalSigma,noiseSigma);
+
     common::filteredSignalVector = processor.simpleFilter(common::signalVector,signalSigma,noiseSigma);
     filteredSignalGraph::signal.setXAxis(common::xAxis);
     filteredSignalGraph::signal.setYAxis(common::filteredSignalVector);
