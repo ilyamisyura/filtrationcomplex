@@ -20,6 +20,11 @@ void DataSignal::setTimeScale(QVector <double> data){
     emit timeScaleChanged(data);
 }
 
+void DataSignal::setNoise(QVector <double> noise){
+    this->noise = noise;
+    emit noiseChanged(noise);
+}
+
 QVector <double> DataSignal::getData(){
     return this->data;
 }

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Filtration Complex</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -183,6 +183,71 @@
       </property>
       <property name="text">
        <string>Filter</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>0</y>
+        <width>251</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Filtration methods</string>
+      </property>
+      <widget class="QRadioButton" name="radioButton">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>191</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Empirical Bayes method</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>231</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Generalized coordinates method</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>191</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Two-criteria method</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="DetailsButton_2">
+      <property name="geometry">
+       <rect>
+        <x>790</x>
+        <y>190</y>
+        <width>121</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Details</string>
       </property>
      </widget>
     </widget>
@@ -650,7 +715,7 @@
         <number>1000</number>
        </property>
        <property name="value">
-        <number>50</number>
+        <number>100</number>
        </property>
       </widget>
       <widget class="QLabel" name="label_3">
@@ -670,9 +735,9 @@
      <widget class="QPushButton" name="DetailsButton">
       <property name="geometry">
        <rect>
-        <x>430</x>
+        <x>790</x>
         <y>190</y>
-        <width>171</width>
+        <width>121</width>
         <height>32</height>
        </rect>
       </property>

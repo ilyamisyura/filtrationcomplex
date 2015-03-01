@@ -198,3 +198,95 @@ QVector <double> SignalGenerator::generateSwitchingRegimeSignal(
 
     return res;
 }
+
+QVector <QVector<double> > SignalGenerator::generateSwitchingRegimeSignalAndNoise(
+        QVector <QVector<double> > tauAndSigmas,
+        double noiseGeneratorParam,
+        double signalGeneratorParam,
+        double exitCondition,
+        double discretizationStep,
+        double startValueMu,
+        double startValueSigma
+        ){
+    QVector <QVector<double> > res;
+
+    QVector <double> startVec;
+    QVector <double> endVec;
+
+    QVector <double> signalPart;
+    QVector <double> signal;
+    QVector <double> noise;
+
+    QVector <double> noiseSignal;
+
+    double tauStart;
+    double sigmaStart;
+    double tauEnd;
+    double sigmaEnd;
+    double partStartValue;
+
+    double lastSignalPartValue;
+
+    int resI;
+    double j; // for complete signal making
+
+    int size;
+
+    lastSignalPartValue = 0;
+
+    //hack
+    double veryFirstValue;
+
+    size = tauAndSigmas.size();
+    j = 0;
+
+    for (int i=0; i<=size-1; i++){
+
+        if (i==0){
+            std::default_random_engine generator;
+            QTime t = QTime::currentTime();
+            generator.seed(t.msec());
+            std::normal_distribution<double> distribution(startValueMu,startValueSigma);
+            partStartValue = distribution(generator);
+            veryFirstValue = partStartValue;
+        }
+        else partStartValue = lastSignalPartValue;
+
+        startVec = tauAndSigmas.value(i);
+        tauStart = startVec.value(0);
+        sigmaStart = startVec.value(1);
+
+        endVec = tauAndSigmas.value(i+1);
+        tauEnd = endVec.value(0);
+        sigmaEnd = endVec.value(1);
+
+        if (i == (tauAndSigmas.size()-1)){
+            tauEnd = exitCondition;
+        }
+
+
+        noiseSignal = this->generateSwitchingRegimeNoise(tauStart,tauEnd,discretizationStep,sigmaStart,lastSignalPartValue,noiseGeneratorParam);
+
+        //hack
+        if (i==0){
+            noiseSignal.replace(0,0);
+        }
+
+        signalPart = this->generateSwitchingRegimeSignalPart(noiseSignal, signalGeneratorParam, discretizationStep,partStartValue);
+
+        lastSignalPartValue = signalPart.last();
+
+        resI = 0;
+
+        while ((j+discretizationStep < tauEnd)&&(j < exitCondition)) {
+            signal.insert(resI,signalPart.value(resI));
+            noise.insert(resI,noiseSignal.value(resI)+veryFirstValue);
+            resI++;
+            j+= discretizationStep;
+        }
+    }
+    res.insert(0,signal);
+    res.insert(1,noise);
+    return res;
+
+}

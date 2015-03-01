@@ -48,6 +48,8 @@ private slots:
     void on_DetailsButton_clicked();
 
 
+    void on_signalNoiseCheckBox_clicked();
+
 private:
     Ui::MainWindow *ui;
 

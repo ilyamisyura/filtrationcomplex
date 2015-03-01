@@ -45,6 +45,8 @@ public:
 
     double getTwoSignalsMin(QVector <double> signal1,QVector <double> signal2);
     double getTwoSignalsMax(QVector <double> signal1,QVector <double> signal2);
+
+    double scalarMultiplication(QVector <double> A, QVector <double> B);
 };
 
 #endif // CORE_H

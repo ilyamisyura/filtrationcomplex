@@ -243,4 +243,18 @@ double FilterCore::getTwoSignalsMax(QVector <double> signal1,QVector <double> si
     return res;
 }
 
+double FilterCore::scalarMultiplication(QVector <double> A, QVector <double> B){
+    if (A.size()!=B.size()){
+        return 0;
+    }
+
+    double sum;
+    sum = 0;
+    for (int i=0; i<A.size(); i++){
+        sum+= A.value(i)*B.value(i);
+    }
+
+    return sum;
+}
+
 

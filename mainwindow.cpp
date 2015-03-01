@@ -21,6 +21,7 @@ int graphI;
 
 namespace common {
     QVector <double> signalVector;
+    QVector <double> noiseVector;
     QVector <double> sigmaVector;
     QVector <double> filteredSignalVector;
     QVector <double> xAxis;
@@ -28,6 +29,7 @@ namespace common {
     //new
     DataSignal unfilteredSignal;
     DataSignal filteredSignal;
+    DataSignal noiseSignal;
 }
 namespace simpleInputs {
     double noiseSigma;
@@ -94,6 +96,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupPlot()
 {
+
     //Main signal graphs
     ui->plot->addGraph();
     signalGraph::sigma.connectWithPlot(ui->plot);
@@ -102,6 +105,13 @@ void MainWindow::setupPlot()
 
 
     ui->plot->addGraph();// for noise, now unused
+    signalGraph::noise.connectWithPlot(ui->plot);
+    signalGraph::noise.setGraphNum(1);
+    QPen *blackPen = new QPen;
+    blackPen->setWidth(1);
+    blackPen->setColor(QColor(0,0,0));
+    signalGraph::noise.setPen(*blackPen);
+    signalGraph::noise.hide();
 
     ui->plot->addGraph();
     signalGraph::signal.connectWithPlot(ui->plot);
@@ -120,9 +130,7 @@ void MainWindow::setupPlot()
     ui->plot->addGraph();
     filteredSignalGraph::signal.connectWithPlot(ui->plot);
     filteredSignalGraph::signal.setGraphNum(4);
-    QPen *blackPen = new QPen;
-    blackPen->setWidth(3);
-    blackPen->setColor(QColor(0,0,0));
+
     filteredSignalGraph::signal.setPen(*blackPen);
     delete blackPen;
 //  ui->plot->graph()->setPen(QPen(Qt::black));
@@ -215,11 +223,20 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     signalGraph::sigma.sendDataToPlot();
 
     common::signalVector.clear();
-    common::signalVector = generator.generateSwitchingRegimeSignal(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep,startingValueMu,startingValueSigma);
-
+    /**
+     * @todo remove invalid code
+     */
+    QVector<QVector<double> > signalAndNoise;
+    signalAndNoise = generator.generateSwitchingRegimeSignalAndNoise(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep,startingValueMu,startingValueSigma);
+//    common::signalVector = generator.generateSwitchingRegimeSignal(tauAndSigmas,noiseGeneratorParam,signalGeneratorParam,exitCondition,discretizationStep,startingValueMu,startingValueSigma);
+    common::signalVector = signalAndNoise.value(0);
+    common::noiseVector = signalAndNoise.value(1);
     //new
     common::unfilteredSignal.setData(common::signalVector);
     common::unfilteredSignal.setTimeScale(common::xAxis);
+
+    common::noiseSignal.setData(signalAndNoise.value(1));
+    common::noiseSignal.setTimeScale(common::xAxis);
 
 
     double margin;
@@ -233,8 +250,13 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
     signalGraph::signal.setSignal(&common::unfilteredSignal);
     signalGraph::signal.sendDataToPlot();
 
+    signalGraph::noise.setSignal(&common::noiseSignal);
+    signalGraph::noise.sendDataToPlot();
+
     filteredSignalGraph::signal.clearData();
     filteredSignalGraph::estimation.clearData();
+
+    ui->plot->rescaleAxes();
 }
 
 void MainWindow::on_switchingRegimeFilterButton_clicked()
@@ -316,8 +338,13 @@ void MainWindow::on_signalSigmaCheckBox_clicked()
     margin = (core.getSignalMax(common::signalVector) - core.getSignalMin(common::signalVector))/20;
 
     if (ui->signalSigmaCheckBox->isChecked()) {
-        ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-margin,
-                                   core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+margin);
+        if (ui->signalCheckBox->isChecked()){
+            ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::sigmaVector)-margin,
+                                       core.getTwoSignalsMax(common::signalVector,common::sigmaVector)+margin);
+        } else {
+            ui->plot->yAxis->setRange(core.getSignalMin(common::sigmaVector)-margin,
+                                       core.getSignalMax(common::sigmaVector)+margin);
+        }
         signalGraph::sigma.show();
     } else {
         ui->plot->yAxis->setRange(core.getSignalMin(common::signalVector)-margin,
@@ -420,4 +447,18 @@ void MainWindow::on_simpleFilterButton_clicked()
 void MainWindow::on_DetailsButton_clicked()
 {
     pDetailsForm->show();
+}
+
+void MainWindow::on_signalNoiseCheckBox_clicked()
+{
+    double margin;
+    margin = (core.getSignalMax(common::signalVector) - core.getSignalMin(common::signalVector))/20;
+    if (ui->signalNoiseCheckBox->isChecked()) {
+        ui->plot->yAxis->setRange(core.getTwoSignalsMin(common::signalVector,common::noiseVector)-margin,
+                                   core.getTwoSignalsMax(common::signalVector,common::noiseVector)+margin);
+
+        signalGraph::noise.show();
+    } else {
+        signalGraph::noise.hide();
+    }
 }

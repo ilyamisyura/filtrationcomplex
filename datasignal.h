@@ -18,15 +18,19 @@ public:
 
 private:
     QVector <double> data;
+    QVector <double> noise;
+    QVector <double> cleanSignal;
     QVector <double> timeScale;
 
 signals:
     void dataChanged(QVector <double> data);
     void timeScaleChanged(QVector <double> data);
+    void noiseChanged(QVector <double> data);
     void cleared();
 
 public slots:
     void setData(QVector <double> data);
+    void setNoise(QVector <double> noise);
     void setTimeScale(QVector <double> timeScale);
     void clear();
 

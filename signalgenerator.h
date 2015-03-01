@@ -42,6 +42,15 @@ public:
             double startValueMu,
             double startValueSigma
             );
+    QVector <QVector<double> > generateSwitchingRegimeSignalAndNoise(
+            QVector <QVector<double> > tauAndSigmas,
+            double noiseGeneratorParam,
+            double signalGeneratorParam,
+            double exitCondition,
+            double discretizationStep,
+            double startValueMu,
+            double startValueSigma
+            );
 };
 
 #endif // SIGNALGENERATOR_H
