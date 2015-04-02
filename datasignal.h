@@ -15,6 +15,7 @@ public:
 //    DataSignal( const DataSignal &obj);  // copy constructor
     QVector <double> getData();
     QVector <double> getTimeScale();
+    int size();
 
 private:
     QVector <double> data;

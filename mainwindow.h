@@ -12,7 +12,7 @@
 
 #include "discretegenerator.h"
 
-const double PI=atan(1)*4;
+//const double PI=atan(1)*4;
 
 
 namespace Ui {

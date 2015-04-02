@@ -38,3 +38,7 @@ void DataSignal::clear(){
     this->timeScale.clear();
     emit cleared();
 }
+
+int DataSignal::size(){
+    return this->data.size();
+}

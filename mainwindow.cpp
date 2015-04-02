@@ -130,9 +130,11 @@ void MainWindow::setupPlot()
     ui->plot->addGraph();
     filteredSignalGraph::signal.connectWithPlot(ui->plot);
     filteredSignalGraph::signal.setGraphNum(4);
-
-    filteredSignalGraph::signal.setPen(*blackPen);
-    delete blackPen;
+    QPen *boldGreenPen = new QPen;
+    boldGreenPen->setWidth(2);
+    boldGreenPen->setColor(QColor(0,0,255));
+    filteredSignalGraph::signal.setPen(*boldGreenPen);
+    delete boldGreenPen;
 //  ui->plot->graph()->setPen(QPen(Qt::black));
 
     //setting visibility
@@ -261,6 +263,10 @@ void MainWindow::on_switchingRegimeGeneratorButton_clicked()
 
 void MainWindow::on_switchingRegimeFilterButton_clicked()
 {
+
+    QTime t = QTime::currentTime();
+    t.start();
+
     using namespace switchingRegimeInputs;
 
     QVector <double> *tmpFilteredVector = new QVector <double>;
@@ -330,6 +336,9 @@ void MainWindow::on_switchingRegimeFilterButton_clicked()
     tmpFilteredVector = &common::filteredSignalVector;
 
     common::filteredSignal.setData(*tmpFilteredVector);
+    qDebug("%d",t.elapsed());
+
+    this->ui->plot->rescaleAxes(true);
 }
 
 void MainWindow::on_signalSigmaCheckBox_clicked()

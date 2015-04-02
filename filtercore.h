@@ -7,6 +7,8 @@
 #include <qmath.h>
 #include <random>
 
+const double PI=atan(1)*4;
+
 class FilterCore
 {
 private:

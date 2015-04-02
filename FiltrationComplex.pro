@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     datasignal.cpp \
     qcustomplotgraph.cpp \
     abstractgenerator.cpp \
-    discretegenerator.cpp
+    discretegenerator.cpp \
+    discreteprocessor.cpp
 
 HEADERS  += mainwindow.h \
     filtercore.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     datasignal.h \
     qcustomplotgraph.h \
     abstractgenerator.h \
-    discretegenerator.h
+    discretegenerator.h \
+    discreteprocessor.h
 
 FORMS    += mainwindow.ui \
     detailsform.ui
